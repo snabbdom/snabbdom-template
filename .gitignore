@@ -1,4 +1,3 @@
-.gitignore
 *.bak
 *.log
 npm-debug.log*
