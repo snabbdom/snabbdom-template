@@ -1,0 +1,25 @@
+{
+  "name": "example",
+  "version": "0.0.0",
+  "private": true,
+  "author": "Andre Staltz",
+  "license": "MIT",
+  "dependencies": {
+    "@cycle/dom": "10.0.0-rc33",
+    "@cycle/isolate": "1.1.x",
+    "@cycle/xstream-run": "3.0.1",
+    "snabbdom-template": "^0.1.0",
+    "xstream": "5.0.5"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.3.13",
+    "babel-register": "^6.4.3",
+    "babelify": "^7.2.0",
+    "brfs": "^1.4.3",
+    "browserify": "11.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify src/main.js -t babelify -t brfs --outfile dist/main.js"
+  }
+}

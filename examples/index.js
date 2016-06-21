@@ -8,20 +8,14 @@ var outer = fs.readFileSync(__dirname + '/public/mainsimple.html', 'utf-8')
 var template = fs.readFileSync('examples/public/template.html', 'utf-8')
 //var simple = fs.readFileSync('examples/public/simplebutton.html', 'utf-8')
 var tmpl = function (state) {
-console.log(outer)
-console.log(template)
+  var numArr = ['one', 'two', 'three', 'four'];
   var content = {
-    'div#message': {class: 'testing132', '_html': 'yup'},
+    'span#cc': {class: 'testing132', '_html': 'yup'},
     '#clicks': 'Clicks: ' + state.n,
-    '#mapme': {_map: {'li': ['one', 'two', 'three', 'four']}},
+    '#mapme': {_map: {'li': numArr}},
     'button': {type: 'button', onclick: onclick, '_html': 'click me?'}
   }
-  var ret = shaved([outer, template], content) /*{
-    'div#message': {class: 'testing132', '_html': 'yup'},
-    '#clicks': 'Clicks: ' + state.n,
-    '#mapme': {_map: {'li': ['one', 'two', 'three', 'four']}},
-    'button': {type: 'button', onclick: onclick, '_html': 'click me?'}
-  })*/
+  var ret = shaved([outer, template], content)
   console.log(content)
   console.log('r',ret)
   console.log('h',s2h(ret))

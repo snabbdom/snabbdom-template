@@ -1,11 +1,12 @@
 var vTSel = require('snabbdom-selector').default
 var vToHTML = require('snabbdom-to-html')
 var hToVDOM = require('snabbdom-virtualize/strings').default
-var sh = require('snabbdom/h')
+//var sh = require('snabbdom/h')
 var vNode = require('snabbdom/vnode')
 var vText = function (text) {
   return vNode(undefined, undefined, undefined, unescape(text))
 }
+
 module.exports = function vDT (templates, contentvars) {
   var vt
   // if arguments are contained in a single object, pull them out
@@ -54,7 +55,7 @@ module.exports = function vDT (templates, contentvars) {
       }
       else if ( 'object' === typeof value  ) {
         Object.keys(value).forEach(function (prop) {
-          var targetprops = target.data.attrs || {}
+          var targetprops = target.data.attrs = target.data.attrs || {}
           var valprop = value[prop]
           if ( '_html' === prop ) {
             target.children = [vText(valprop)]
@@ -86,11 +87,6 @@ module.exports = function vDT (templates, contentvars) {
             })
           }
           else {
-          /*
-            if ( 'class' === prop || 'id' === prop || (/^on/.test(prop) && 'function' === typeof valprop) ) {
-              targetprops = target.data
-              if ( 'class' === prop ) { prop = 'className' }
-            }*/
             var cur = targetprops[prop] || ''
             if ( valprop && 'object' === typeof valprop && null !== valprop ) {
               if ( valprop.append ) { cur += valprop.append }
