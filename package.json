@@ -1,6 +1,6 @@
 {
   "name": "snabbdom-template",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Virtual-DOM-based template module for populating HTML templates with dynamic data and building dynamic lists and tables.",
   "main": "index.js",
   "scripts": {
