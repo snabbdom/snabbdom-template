@@ -88,6 +88,37 @@ template.html
 </html>
 ```
 
+### vtree example
+
+```
+var sh = require('snabbdom/h')
+var outer = fs.readFileSync('public/outer.html', 'utf-8')
+
+var vtree = snabbdomTemplate(outer, sh('div.myclass', 'My content.'))
+```
+
+...outputs a vtree that renders to:
+
+```
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>snabbdom-template</title>
+    <link rel="stylesheet" type="text/css" href="public/css/main.css">
+  </head>
+  <body>
+  </head>
+  <body>
+    <div class="template">
+      <div class="myclass">My content.</div>
+    </div>
+    <div id="scripts">
+      <script src="public/js/main.js"></script>
+    </div>
+  </body>
+</html>
+```
+
 ### license
 
 MIT
