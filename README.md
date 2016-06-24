@@ -14,7 +14,7 @@ var outer = fs.readFileSync('public/outer.html', 'utf-8')
 var section = fs.readFileSync('public/section.html', 'utf-8')
 var template = fs.readFileSync('public/template.html', 'utf-8')
 
-var vdom = snabbdomTemplate([outer, section, template], {
+var vtree = snabbdomTemplate([outer, section, template], {
   '#sectionheader': 'Start Here:',
   'div#message': {class: 'myclass', '_html': 'Ready.'},
   '#mapme': {_map: {'li': ['one', 'two', 'three', 'four']}},
