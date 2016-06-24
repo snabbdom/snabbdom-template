@@ -12767,10 +12767,8 @@ var _snabbdomTemplate2 = _interopRequireDefault(_snabbdomTemplate);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
- // import not working with brfs
 
-
-var template = "<div>\n  <label>Name:</label>\n  <input class=\"myinput\" type=\"text\">\n  <hr>\n  <h1>Hey! <span id=\"output\">output here</span></h1>\n</div>\n";
+var template = "<div>\n  <label>Name:</label>\n  <input class=\"myinput\" type=\"text\">\n  <hr>\n  <h1>Hey <span id=\"output\">output here</span>!</h1>\n</div>\n";
 
 function main(sources) {
   return {

@@ -1,6 +1,6 @@
 import Cycle from '@cycle/xstream-run';
 import {div, label, input, hr, h1, makeDOMDriver} from '@cycle/dom';
-import st from 'snabbdom-template';
+import st from '../../../';
 
 const fs = require('fs');
 const template = fs.readFileSync('template.html', 'utf-8');

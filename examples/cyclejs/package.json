@@ -8,7 +8,6 @@
     "@cycle/dom": "10.0.0-rc33",
     "@cycle/isolate": "1.1.x",
     "@cycle/xstream-run": "3.0.1",
-    "snabbdom-template": "^0.1.0",
     "xstream": "5.0.5"
   },
   "devDependencies": {
