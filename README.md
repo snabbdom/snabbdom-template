@@ -27,7 +27,7 @@ outer.html
 <!DOCTYPE html>
 <html>
   <head>
-    <title>shave-template</title>
+    <title>snabbdom-template</title>
     <link rel="stylesheet" type="text/css" href="public/css/main.css">
   </head>
   <body>
