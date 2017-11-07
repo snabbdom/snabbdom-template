@@ -165,7 +165,7 @@ var HTMLSource = (function () {
 }());
 exports.HTMLSource = HTMLSource;
 
-},{"@cycle/xstream-adapter":19,"xstream":147}],4:[function(require,module,exports){
+},{"@cycle/xstream-adapter":19,"xstream":98}],4:[function(require,module,exports){
 "use strict";
 var xstream_adapter_1 = require('@cycle/xstream-adapter');
 var xstream_1 = require('xstream');
@@ -327,7 +327,7 @@ var MainDOMSource = (function () {
 }());
 exports.MainDOMSource = MainDOMSource;
 
-},{"./ElementFinder":1,"./EventDelegator":2,"./fromEvent":7,"./isolate":11,"./utils":18,"@cycle/xstream-adapter":19,"matches-selector":20,"xstream":147}],5:[function(require,module,exports){
+},{"./ElementFinder":1,"./EventDelegator":2,"./fromEvent":7,"./isolate":11,"./utils":18,"@cycle/xstream-adapter":19,"matches-selector":20,"xstream":98}],5:[function(require,module,exports){
 "use strict";
 var ScopeChecker = (function () {
     function ScopeChecker(scope, isolateModule) {
@@ -400,7 +400,7 @@ function fromEvent(element, eventName, useCapture) {
 }
 exports.fromEvent = fromEvent;
 
-},{"xstream":147}],8:[function(require,module,exports){
+},{"xstream":98}],8:[function(require,module,exports){
 "use strict";
 var hyperscript_1 = require('./hyperscript');
 function isValidString(param) {
@@ -843,7 +843,7 @@ function makeDOMDriver(container, options) {
 }
 exports.makeDOMDriver = makeDOMDriver;
 
-},{"./MainDOMSource":4,"./VNodeWrapper":6,"./isolateModule":12,"./modules":16,"./transposition":17,"./utils":18,"@cycle/xstream-adapter":19,"snabbdom":65,"xstream":147}],14:[function(require,module,exports){
+},{"./MainDOMSource":4,"./VNodeWrapper":6,"./isolateModule":12,"./modules":16,"./transposition":17,"./utils":18,"@cycle/xstream-adapter":19,"snabbdom":65,"xstream":98}],14:[function(require,module,exports){
 "use strict";
 var xstream_adapter_1 = require('@cycle/xstream-adapter');
 var transposition_1 = require('./transposition');
@@ -924,7 +924,7 @@ function mockDOMSource(streamAdapter, mockConfig) {
 }
 exports.mockDOMSource = mockDOMSource;
 
-},{"@cycle/xstream-adapter":19,"xstream":147}],16:[function(require,module,exports){
+},{"@cycle/xstream-adapter":19,"xstream":98}],16:[function(require,module,exports){
 "use strict";
 var ClassModule = require('snabbdom/modules/class');
 exports.ClassModule = ClassModule;
@@ -989,7 +989,7 @@ function makeTransposeVNode(runStreamAdapter) {
 }
 exports.makeTransposeVNode = makeTransposeVNode;
 
-},{"@cycle/xstream-adapter":19,"xstream":147}],18:[function(require,module,exports){
+},{"@cycle/xstream-adapter":19,"xstream":98}],18:[function(require,module,exports){
 "use strict";
 function isElement(obj) {
     return typeof HTMLElement === "object" ?
@@ -1071,7 +1071,7 @@ var XStreamAdapter = {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = XStreamAdapter;
 
-},{"xstream":147}],20:[function(require,module,exports){
+},{"xstream":98}],20:[function(require,module,exports){
 'use strict';
 
 var proto = Element.prototype;
@@ -4718,7 +4718,7 @@ exports.default = Cycle;
 
 },{}],70:[function(require,module,exports){
 arguments[4][19][0].apply(exports,arguments)
-},{"dup":19,"xstream":147}],71:[function(require,module,exports){
+},{"dup":19,"xstream":98}],71:[function(require,module,exports){
 
 },{}],72:[function(require,module,exports){
 (function (global){
@@ -9396,1668 +9396,6 @@ function base64DetectIncompleteChar(buffer) {
 }
 
 },{"buffer":72}],97:[function(require,module,exports){
-var vTSel = require('snabbdom-selector').default
-var vToHTML = require('snabbdom-to-html')
-var hToVDOM = require('snabbdom-virtualize/strings').default
-var sh = require('snabbdom/h')
-var vNode = require('snabbdom/vnode')
-var vText = function (text) {
-  return vNode(undefined, undefined, undefined, unescape(text))
-}
-module.exports = function vDT (templates, contentvars) {
-  var vt
-  // if arguments are contained in a single object, pull them out
-  if ( 'object' === typeof templates && !Array.isArray(templates)
-    && undefined === contentvars
-  ) {
-    contentvars = templates[Object.keys(templates)[1]]
-    templates = templates[Object.keys(templates)[0]]
-  }
-  contentvars = contentvars || {}
-  if ( Array.isArray(templates) ) {
-    if ( 1 < templates.length ) {
-      var start = templates.reverse().shift()
-      start = Array.isArray(start)? vNode('div', {}, start): start // wrap div around array of elems
-      vt = templates.reduce(function(prev, next) {
-        var ret = hToVDOM(next)
-        ret = Array.isArray(ret)? vNode('div', {}, ret): ret // wrap div around array of elems
-        var tar = vTSel('.template', ret)
-        if ( tar.length ) {
-          tar[0].children = prev && prev.children || undefined
-        }
-        else { console.log('Template selector not found.') }
-        return ret
-      }, hToVDOM(start))
-      vt = hToVDOM(vToHTML(vt)) // how to clone?
-    }
-    else {
-      vt = hToVDOM(templates[0])
-      vt = Array.isArray(vt)? vNode('div', {}, vt): vt // wrap div around array of elems
-    }
-  }
-  else if ( 'object' === typeof templates ) {
-    vt = hToVDOM(vToHTML(templates)) // fixes glitch copying templates
-  }
-  else {
-    vt = hToVDOM(templates)
-    vt = Array.isArray(vt)? vNode('div', {}, vt): vt // wrap div around array of elems
-  }
-  Object.keys(contentvars).forEach(function (sel) {
-    var value = contentvars[sel]
-    var target = vTSel(sel, vt)
-    if ( target.length ) {
-      target = target[0]
-      if ( 'string' === typeof value || 'number' === typeof value ) {
-        target.children = [vText(value)]
-      }
-      else if ( 'object' === typeof value  ) {
-        Object.keys(value).forEach(function (prop) {
-          var targetprops = target.data.attrs || {}
-          var valprop = value[prop]
-          if ( '_html' === prop ) {
-            target.children = [vText(valprop)]
-          }
-          else if ( '_append' === prop ) {
-            target.children.push(vText(valprop))
-          }
-          else if ( '_prepend' === prop ) {
-            target.children.unshift(vText(valprop))
-          }
-          else if (/^_map/.test(prop) && 'object' === typeof valprop && null !== valprop ) {
-            Object.keys(valprop).forEach(function (mapkey) {
-              var subtmpl = hToVDOM(vToHTML(vTSel(mapkey, target)[0])) // how else to clone?
-              if ( '_map' === prop ) { target.children = [] }
-              valprop[mapkey].forEach(function (cvars) {
-                var mapd
-                if ( 'string' === typeof cvars ) {
-                  subtmpl.children = [vText(cvars)]
-                  mapd = hToVDOM(vToHTML(subtmpl)) // how to clone?
-                }
-                else if ( 'object' === typeof cvars ) {
-                  mapd = vDT(subtmpl, cvars)
-                }
-                switch ( prop ) {
-                  case '_mapprepend': target.children.unshift(mapd); break
-                  default: target.children.push(mapd); break
-                }
-              })
-            })
-          }
-          else {
-          /*
-            if ( 'class' === prop || 'id' === prop || (/^on/.test(prop) && 'function' === typeof valprop) ) {
-              targetprops = target.data
-              if ( 'class' === prop ) { prop = 'className' }
-            }*/
-            var cur = targetprops[prop] || ''
-            if ( valprop && 'object' === typeof valprop && null !== valprop ) {
-              if ( valprop.append ) { cur += valprop.append }
-              else if ( valprop.prepend ) { cur = valprop.prepend + cur }
-            }
-            else { cur = valprop }
-            targetprops[prop] = cur
-          }
-        })
-      }
-      else if ( 'function' === typeof value ) {
-        target.children[0].text = value(target.children[0].text)
-      }
-    } // end if target
-    else { console.log('Selector not found. ', sel) }
-  })
-  return vt
-}
-
-},{"snabbdom-selector":99,"snabbdom-to-html":107,"snabbdom-virtualize/strings":142,"snabbdom/h":143,"snabbdom/vnode":145}],98:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = classNameFromVNode;
-
-var _selectorParser2 = require('./selectorParser');
-
-var _selectorParser3 = _interopRequireDefault(_selectorParser2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function classNameFromVNode(vNode) {
-  var _selectorParser = (0, _selectorParser3.default)(vNode.sel);
-
-  var cn = _selectorParser.className;
-
-
-  if (!vNode.data) {
-    return cn;
-  }
-
-  var _vNode$data = vNode.data;
-  var dataClass = _vNode$data.class;
-  var props = _vNode$data.props;
-
-
-  if (dataClass) {
-    var c = Object.keys(vNode.data.class).filter(function (cl) {
-      return vNode.data.class[cl];
-    });
-    cn += ' ' + c.join(' ');
-  }
-
-  if (props && props.className) {
-    cn += ' ' + props.className;
-  }
-
-  return cn.trim();
-}
-},{"./selectorParser":101}],99:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _language = require('./language');
-
-var _language2 = _interopRequireDefault(_language);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function traverse(vNode, fn) {
-  fn(vNode);
-  if (vNode.children) {
-    vNode.children.forEach(function (child) {
-      traverse(child, fn);
-    });
-  }
-}
-
-function wrapVNode(vNode, parent) {
-  var children = vNode.children;
-
-  if (children && typeof children.map === 'function') {
-    children = children.map(function (k) {
-      return wrapVNode(k, vNode);
-    });
-  }
-  vNode.parent = parent;
-  return vNode;
-}
-
-function match(sel, vNode) {
-  var selector = (0, _language2.default)(sel);
-  var matched = [];
-
-  var wrappedVNode = wrapVNode(vNode);
-
-  traverse(wrappedVNode, function (node) {
-    var result = void 0;
-    if (node.data && node.data.vnode) {
-      result = selector(node.data.vnode);
-    } else if (node.data && node.data.fn) {
-      var _node$data;
-
-      result = selector((_node$data = node.data).fn.apply(_node$data, _toConsumableArray(node.data.args)));
-    } else {
-      result = selector(node);
-    }
-    if (result) {
-      if (!Array.isArray(result)) {
-        result = [result];
-      }
-      matched.push.apply(matched, result);
-    }
-  });
-  return matched;
-}
-
-exports.default = match;
-},{"./language":100}],100:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _cssauron = require('cssauron');
-
-var _cssauron2 = _interopRequireDefault(_cssauron);
-
-var _selectorParser = require('./selectorParser');
-
-var _selectorParser2 = _interopRequireDefault(_selectorParser);
-
-var _classNameFromVNode = require('./classNameFromVNode');
-
-var _classNameFromVNode2 = _interopRequireDefault(_classNameFromVNode);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function LanguageSpecification() {}
-
-LanguageSpecification.prototype.tag = function tag(vNode) {
-  return (0, _selectorParser2.default)(vNode.sel).tagName;
-};
-
-LanguageSpecification.prototype.class = function klass(vNode) {
-  return (0, _classNameFromVNode2.default)(vNode);
-};
-
-LanguageSpecification.prototype.id = function id(vNode) {
-  if (vNode.data && vNode.data.props && vNode.data.props.id) {
-    return vNode.data.props.id;
-  } else if (vNode.data && vNode.data.attrs && vNode.data.attrs.id) {
-    return vNode.data.attrs.id;
-  }
-  return (0, _selectorParser2.default)(vNode.sel).id;
-};
-
-LanguageSpecification.prototype.children = function children(vNode) {
-  return vNode.children || [];
-};
-
-LanguageSpecification.prototype.parent = function parent(vNode) {
-  return vNode.parent || vNode;
-};
-
-LanguageSpecification.prototype.contents = function contents(vNode) {
-  return vNode.text;
-};
-
-LanguageSpecification.prototype.attr = function attributes(vNode, attr) {
-  if (vNode.data) {
-    var _vNode$data = vNode.data;
-    var _vNode$data$attrs = _vNode$data.attrs;
-    var attrs = _vNode$data$attrs === undefined ? {} : _vNode$data$attrs;
-    var _vNode$data$props = _vNode$data.props;
-    var props = _vNode$data$props === undefined ? {} : _vNode$data$props;
-
-    if (attrs[attr]) {
-      return attrs[attr];
-    }
-    if (props[attr]) {
-      return props[attr];
-    }
-  }
-};
-
-var language = (0, _cssauron2.default)(new LanguageSpecification());
-
-exports.default = language;
-},{"./classNameFromVNode":98,"./selectorParser":101,"cssauron":103}],101:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = selectorParser;
-
-var _browserSplit = require('browser-split');
-
-var _browserSplit2 = _interopRequireDefault(_browserSplit);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var classIdSplit = /([\.#]?[a-zA-Z0-9\u007F-\uFFFF_:-]+)/;
-var notClassId = /^\.|#/;
-
-function selectorParser() {
-  var selector = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
-
-  var tagName = void 0;
-  var id = '';
-  var classes = [];
-
-  var tagParts = (0, _browserSplit2.default)(selector, classIdSplit);
-
-  if (notClassId.test(tagParts[1]) || selector === '') {
-    tagName = 'div';
-  }
-
-  var part = void 0;
-  var type = void 0;
-  var i = void 0;
-
-  for (i = 0; i < tagParts.length; i++) {
-    part = tagParts[i];
-
-    if (!part) {
-      continue;
-    }
-
-    type = part.charAt(0);
-
-    if (!tagName) {
-      tagName = part;
-    } else if (type === '.') {
-      classes.push(part.substring(1, part.length));
-    } else if (type === '#') {
-      id = part.substring(1, part.length);
-    }
-  }
-
-  return {
-    tagName: tagName,
-    id: id,
-    className: classes.join(' ')
-  };
-}
-},{"browser-split":102}],102:[function(require,module,exports){
-arguments[4][23][0].apply(exports,arguments)
-},{"dup":23}],103:[function(require,module,exports){
-module.exports = language
-
-var tokenizer = require('./tokenizer')
-
-function language(lookups, matchComparison) {
-  return function(selector) {
-    return parse(selector, remap(lookups),
-                 matchComparison || caseSensitiveComparison)
-  }
-}
-
-function remap(opts) {
-  for(var key in opts) if(opt_okay(opts, key)) {
-    opts[key] = Function(
-        'return function(node, attr) { return node.' + opts[key] + ' }'
-    )
-    opts[key] = opts[key]()
-  }
-
-  return opts
-}
-
-function opt_okay(opts, key) {
-  return opts.hasOwnProperty(key) && typeof opts[key] === 'string'
-}
-
-function parse(selector, options, matchComparison) {
-  var stream = tokenizer()
-    , default_subj = true
-    , selectors = [[]]
-    , traversal
-    , bits
-
-  bits = selectors[0]
-
-  traversal = {
-      '': any_parents
-    , '>': direct_parent
-    , '+': direct_sibling
-    , '~': any_sibling
-  }
-
-  stream
-    .on('data', group)
-    .end(selector)
-
-  function group(token) {
-    var crnt
-
-    if(token.type === 'comma') {
-      selectors.unshift(bits = [])
-
-      return
-    }
-
-    if(token.type === 'op' || token.type === 'any-child') {
-      bits.unshift(traversal[token.data])
-      bits.unshift(check())
-
-      return
-    }
-
-    bits[0] = bits[0] || check()
-    crnt = bits[0]
-
-    if(token.type === '!') {
-      crnt.subject =
-      selectors[0].subject = true
-
-      return
-    }
-
-    crnt.push(
-        token.type === 'class' ? listContains(token.type, token.data) :
-        token.type === 'attr' ? attr(token) :
-        token.type === ':' || token.type === '::' ? pseudo(token) :
-        token.type === '*' ? Boolean :
-        matches(token.type, token.data, matchComparison)
-    )
-  }
-
-  return selector_fn
-
-  function selector_fn(node, as_boolean) {
-    var current
-      , length
-      , orig
-      , subj
-      , set
-
-    orig = node
-    set = []
-
-    for(var i = 0, len = selectors.length; i < len; ++i) {
-      bits = selectors[i]
-      current = entry
-      length = bits.length
-      node = orig
-      subj = []
-
-      for(var j = 0; j < length; j += 2) {
-        node = current(node, bits[j], subj)
-
-        if(!node) {
-          break
-        }
-
-        current = bits[j + 1]
-      }
-
-      if(j >= length) {
-        if(as_boolean) {
-          return true
-        }
-
-        add(!bits.subject ? [orig] : subj)
-      }
-    }
-
-    if(as_boolean) {
-      return false
-    }
-
-    return !set.length ? false :
-            set.length === 1 ? set[0] :
-            set
-
-    function add(items) {
-      var next
-
-      while(items.length) {
-        next = items.shift()
-
-        if(set.indexOf(next) === -1) {
-          set.push(next)
-        }
-      }
-    }
-  }
-
-  function check() {
-    _check.bits = []
-    _check.subject = false
-    _check.push = function(token) {
-      _check.bits.push(token)
-    }
-
-    return _check
-
-    function _check(node, subj) {
-      for(var i = 0, len = _check.bits.length; i < len; ++i) {
-        if(!_check.bits[i](node)) {
-          return false
-        }
-      }
-
-      if(_check.subject) {
-        subj.push(node)
-      }
-
-      return true
-    }
-  }
-
-  function listContains(type, data) {
-    return function(node) {
-      var val = options[type](node)
-      val =
-        Array.isArray(val) ? val :
-        val ? val.toString().split(/\s+/) :
-        []
-      return val.indexOf(data) >= 0
-    }
-  }
-
-  function attr(token) {
-    return token.data.lhs ?
-      valid_attr(
-          options.attr
-        , token.data.lhs
-        , token.data.cmp
-        , token.data.rhs
-      ) :
-      valid_attr(options.attr, token.data)
-  }
-
-  function matches(type, data, matchComparison) {
-    return function(node) {
-      return matchComparison(type, options[type](node), data);
-    }
-  }
-
-  function any_parents(node, next, subj) {
-    do {
-      node = options.parent(node)
-    } while(node && !next(node, subj))
-
-    return node
-  }
-
-  function direct_parent(node, next, subj) {
-    node = options.parent(node)
-
-    return node && next(node, subj) ? node : null
-  }
-
-  function direct_sibling(node, next, subj) {
-    var parent = options.parent(node)
-      , idx = 0
-      , children
-
-    children = options.children(parent)
-
-    for(var i = 0, len = children.length; i < len; ++i) {
-      if(children[i] === node) {
-        idx = i
-
-        break
-      }
-    }
-
-    return children[idx - 1] && next(children[idx - 1], subj) ?
-      children[idx - 1] :
-      null
-  }
-
-  function any_sibling(node, next, subj) {
-    var parent = options.parent(node)
-      , children
-
-    children = options.children(parent)
-
-    for(var i = 0, len = children.length; i < len; ++i) {
-      if(children[i] === node) {
-        return null
-      }
-
-      if(next(children[i], subj)) {
-        return children[i]
-      }
-    }
-
-    return null
-  }
-
-  function pseudo(token) {
-    return valid_pseudo(options, token.data, matchComparison)
-  }
-
-}
-
-function entry(node, next, subj) {
-  return next(node, subj) ? node : null
-}
-
-function valid_pseudo(options, match, matchComparison) {
-  switch(match) {
-    case 'empty': return valid_empty(options)
-    case 'first-child': return valid_first_child(options)
-    case 'last-child': return valid_last_child(options)
-    case 'root': return valid_root(options)
-  }
-
-  if(match.indexOf('contains') === 0) {
-    return valid_contains(options, match.slice(9, -1))
-  }
-
-  if(match.indexOf('any') === 0) {
-    return valid_any_match(options, match.slice(4, -1), matchComparison)
-  }
-
-  if(match.indexOf('not') === 0) {
-    return valid_not_match(options, match.slice(4, -1), matchComparison)
-  }
-
-  if(match.indexOf('nth-child') === 0) {
-    return valid_nth_child(options, match.slice(10, -1))
-  }
-
-  return function() {
-    return false
-  }
-}
-
-function valid_not_match(options, selector, matchComparison) {
-  var fn = parse(selector, options, matchComparison)
-
-  return not_function
-
-  function not_function(node) {
-    return !fn(node, true)
-  }
-}
-
-function valid_any_match(options, selector, matchComparison) {
-  var fn = parse(selector, options, matchComparison)
-
-  return fn
-}
-
-function valid_attr(fn, lhs, cmp, rhs) {
-  return function(node) {
-    var attr = fn(node, lhs)
-
-    if(!cmp) {
-      return !!attr
-    }
-
-    if(cmp.length === 1) {
-      return attr == rhs
-    }
-
-    if(attr === void 0 || attr === null) {
-      return false
-    }
-
-    return checkattr[cmp.charAt(0)](attr, rhs)
-  }
-}
-
-function valid_first_child(options) {
-  return function(node) {
-    return options.children(options.parent(node))[0] === node
-  }
-}
-
-function valid_last_child(options) {
-  return function(node) {
-    var children = options.children(options.parent(node))
-
-    return children[children.length - 1] === node
-  }
-}
-
-function valid_empty(options) {
-  return function(node) {
-    return options.children(node).length === 0
-  }
-}
-
-function valid_root(options) {
-  return function(node) {
-    return !options.parent(node)
-  }
-}
-
-function valid_contains(options, contents) {
-  return function(node) {
-    return options.contents(node).indexOf(contents) !== -1
-  }
-}
-
-function valid_nth_child(options, nth) {
-  var test = function(){ return false }
-  if (nth == 'odd') {
-    nth = '2n+1'
-  } else if (nth == 'even') {
-    nth = '2n'
-  }
-  var regexp = /( ?([-|\+])?(\d*)n)? ?((\+|-)? ?(\d+))? ?/
-  var matches = nth.match(regexp)
-  if (matches) {
-    var growth = 0;
-    if (matches[1]) {
-      var positiveGrowth = (matches[2] != '-')
-      growth = parseInt(matches[3] == '' ? 1 : matches[3])
-      growth = growth * (positiveGrowth ? 1 : -1)
-    }
-    var offset = 0
-    if (matches[4]) {
-      offset = parseInt(matches[6])
-      var positiveOffset = (matches[5] != '-')
-      offset = offset * (positiveOffset ? 1 : -1)
-    }
-    if (growth == 0) {
-      if (offset != 0) {
-        test = function(children, node) {
-          return children[offset - 1] === node
-        }
-      }
-    } else {
-      test = function(children, node) {
-        var validPositions = []
-        var len = children.length
-        for (var position=1; position <= len; position++) {
-          var divisible = ((position - offset) % growth) == 0;
-          if (divisible) {
-            if (growth > 0) {
-              validPositions.push(position);
-            } else {
-              if ((position - offset) / growth >= 0) {
-                validPositions.push(position);
-              }
-            }
-          }
-        }
-        for(var i=0; i < validPositions.length; i++) {
-          if (children[validPositions[i] - 1] === node) {
-            return true
-          }
-        }
-        return false
-      }
-    }
-  }
-  return function(node) {
-    var children = options.children(options.parent(node))
-
-    return test(children, node)
-  }
-}
-
-var checkattr = {
-    '$': check_end
-  , '^': check_beg
-  , '*': check_any
-  , '~': check_spc
-  , '|': check_dsh
-}
-
-function check_end(l, r) {
-  return l.slice(l.length - r.length) === r
-}
-
-function check_beg(l, r) {
-  return l.slice(0, r.length) === r
-}
-
-function check_any(l, r) {
-  return l.indexOf(r) > -1
-}
-
-function check_spc(l, r) {
-  return l.split(/\s+/).indexOf(r) > -1
-}
-
-function check_dsh(l, r) {
-  return l.split('-').indexOf(r) > -1
-}
-
-function caseSensitiveComparison(type, pattern, data) {
-  return pattern === data;
-}
-
-},{"./tokenizer":105}],104:[function(require,module,exports){
-(function (process){
-var Stream = require('stream')
-
-// through
-//
-// a stream that does nothing but re-emit the input.
-// useful for aggregating a series of changing but not ending streams into one stream)
-
-exports = module.exports = through
-through.through = through
-
-//create a readable writable stream.
-
-function through (write, end, opts) {
-  write = write || function (data) { this.queue(data) }
-  end = end || function () { this.queue(null) }
-
-  var ended = false, destroyed = false, buffer = [], _ended = false
-  var stream = new Stream()
-  stream.readable = stream.writable = true
-  stream.paused = false
-
-//  stream.autoPause   = !(opts && opts.autoPause   === false)
-  stream.autoDestroy = !(opts && opts.autoDestroy === false)
-
-  stream.write = function (data) {
-    write.call(this, data)
-    return !stream.paused
-  }
-
-  function drain() {
-    while(buffer.length && !stream.paused) {
-      var data = buffer.shift()
-      if(null === data)
-        return stream.emit('end')
-      else
-        stream.emit('data', data)
-    }
-  }
-
-  stream.queue = stream.push = function (data) {
-//    console.error(ended)
-    if(_ended) return stream
-    if(data === null) _ended = true
-    buffer.push(data)
-    drain()
-    return stream
-  }
-
-  //this will be registered as the first 'end' listener
-  //must call destroy next tick, to make sure we're after any
-  //stream piped from here.
-  //this is only a problem if end is not emitted synchronously.
-  //a nicer way to do this is to make sure this is the last listener for 'end'
-
-  stream.on('end', function () {
-    stream.readable = false
-    if(!stream.writable && stream.autoDestroy)
-      process.nextTick(function () {
-        stream.destroy()
-      })
-  })
-
-  function _end () {
-    stream.writable = false
-    end.call(stream)
-    if(!stream.readable && stream.autoDestroy)
-      stream.destroy()
-  }
-
-  stream.end = function (data) {
-    if(ended) return
-    ended = true
-    if(arguments.length) stream.write(data)
-    _end() // will emit or queue
-    return stream
-  }
-
-  stream.destroy = function () {
-    if(destroyed) return
-    destroyed = true
-    ended = true
-    buffer.length = 0
-    stream.writable = stream.readable = false
-    stream.emit('close')
-    return stream
-  }
-
-  stream.pause = function () {
-    if(stream.paused) return
-    stream.paused = true
-    return stream
-  }
-
-  stream.resume = function () {
-    if(stream.paused) {
-      stream.paused = false
-      stream.emit('resume')
-    }
-    drain()
-    //may have become paused again,
-    //as drain emits 'data'.
-    if(!stream.paused)
-      stream.emit('drain')
-    return stream
-  }
-  return stream
-}
-
-
-}).call(this,require('_process'))
-},{"_process":79,"stream":95}],105:[function(require,module,exports){
-module.exports = tokenize
-
-var through = require('through')
-
-var PSEUDOSTART = 'pseudo-start'
-  , ATTR_START = 'attr-start'
-  , ANY_CHILD = 'any-child'
-  , ATTR_COMP = 'attr-comp'
-  , ATTR_END = 'attr-end'
-  , PSEUDOPSEUDO = '::'
-  , PSEUDOCLASS = ':'
-  , READY = '(ready)'
-  , OPERATION = 'op'
-  , CLASS = 'class'
-  , COMMA = 'comma'
-  , ATTR = 'attr'
-  , SUBJECT = '!'
-  , TAG = 'tag'
-  , STAR = '*'
-  , ID = 'id'
-
-function tokenize() {
-  var escaped = false
-    , gathered = []
-    , state = READY 
-    , data = []
-    , idx = 0
-    , stream
-    , length
-    , quote
-    , depth
-    , lhs
-    , rhs
-    , cmp
-    , c
-
-  return stream = through(ondata, onend)
-
-  function ondata(chunk) {
-    data = data.concat(chunk.split(''))
-    length = data.length
-
-    while(idx < length && (c = data[idx++])) {
-      switch(state) {
-        case READY: state_ready(); break
-        case ANY_CHILD: state_any_child(); break
-        case OPERATION: state_op(); break
-        case ATTR_START: state_attr_start(); break
-        case ATTR_COMP: state_attr_compare(); break
-        case ATTR_END: state_attr_end(); break
-        case PSEUDOCLASS:
-        case PSEUDOPSEUDO: state_pseudo(); break
-        case PSEUDOSTART: state_pseudostart(); break
-        case ID:
-        case TAG:
-        case CLASS: state_gather(); break
-      }
-    }
-
-    data = data.slice(idx)
-  }
-
-  function onend(chunk) {
-    if(arguments.length) {
-      ondata(chunk)
-    }
-
-    if(gathered.length) {
-      stream.queue(token())
-    }
-  }
-
-  function state_ready() {
-    switch(true) {
-      case '#' === c: state = ID; break
-      case '.' === c: state = CLASS; break
-      case ':' === c: state = PSEUDOCLASS; break
-      case '[' === c: state = ATTR_START; break
-      case '!' === c: subject(); break
-      case '*' === c: star(); break
-      case ',' === c: comma(); break
-      case /[>\+~]/.test(c): state = OPERATION; break
-      case /\s/.test(c): state = ANY_CHILD; break
-      case /[\w\d\-_]/.test(c): state = TAG; --idx; break
-    }
-  }
-
-  function subject() {
-    state = SUBJECT
-    gathered = ['!']
-    stream.queue(token())
-    state = READY
-  }
-
-  function star() {
-    state = STAR
-    gathered = ['*']
-    stream.queue(token())
-    state = READY
-  }
-
-  function comma() {
-    state = COMMA
-    gathered = [',']
-    stream.queue(token())
-    state = READY
-  }
-
-  function state_op() {
-    if(/[>\+~]/.test(c)) {
-      return gathered.push(c)
-    }
-
-    // chomp down the following whitespace.
-    if(/\s/.test(c)) {
-      return
-    }
-
-    stream.queue(token())
-    state = READY
-    --idx
-  }
-
-  function state_any_child() {
-    if(/\s/.test(c)) {
-      return
-    }
-
-    if(/[>\+~]/.test(c)) {
-      return --idx, state = OPERATION
-    }
-
-    stream.queue(token())
-    state = READY
-    --idx
-  }
-
-  function state_pseudo() {
-    rhs = state
-    state_gather(true)
-
-    if(state !== READY) {
-      return
-    }
-
-    if(c === '(') {
-      lhs = gathered.join('')
-      state = PSEUDOSTART
-      gathered.length = 0
-      depth = 1
-      ++idx
-
-      return
-    }
-
-    state = PSEUDOCLASS
-    stream.queue(token())
-    state = READY
-  }
-
-  function state_pseudostart() {
-    if(gathered.length === 0 && !quote) {
-      quote = /['"]/.test(c) ? c : null
-
-      if(quote) {
-        return
-      }
-    }
-
-    if(quote) {
-      if(!escaped && c === quote) {
-        quote = null
-
-        return
-      }
-
-      if(c === '\\') {
-        escaped ? gathered.push(c) : (escaped = true)
-
-        return
-      }
-
-      escaped = false
-      gathered.push(c)
-
-      return
-    }
-
-    gathered.push(c)
-
-    if(c === '(') {
-      ++depth
-    } else if(c === ')') {
-      --depth
-    }
-    
-    if(!depth) {
-      gathered.pop()
-      stream.queue({
-          type: rhs 
-        , data: lhs + '(' + gathered.join('') + ')'
-      })
-
-      state = READY
-      lhs = rhs = cmp = null
-      gathered.length = 0
-    }
-
-    return 
-  }
-
-  function state_attr_start() {
-    state_gather(true)
-
-    if(state !== READY) {
-      return
-    }
-
-    if(c === ']') {
-      state = ATTR
-      stream.queue(token())
-      state = READY
-
-      return
-    }
-
-    lhs = gathered.join('')
-    gathered.length = 0
-    state = ATTR_COMP
-  }
-
-  function state_attr_compare() {
-    if(/[=~|$^*]/.test(c)) {
-      gathered.push(c)
-    }
-
-    if(gathered.length === 2 || c === '=') {
-      cmp = gathered.join('')
-      gathered.length = 0
-      state = ATTR_END
-      quote = null
-
-      return
-    }
-  }
-
-  function state_attr_end() {
-    if(!gathered.length && !quote) {
-      quote = /['"]/.test(c) ? c : null
-
-      if(quote) {
-        return
-      }
-    }
-
-    if(quote) {
-      if(!escaped && c === quote) {
-        quote = null
-
-        return
-      }
-
-      if(c === '\\') {
-        if(escaped) {
-          gathered.push(c)
-        }
-
-        escaped = !escaped
-
-        return
-      }
-
-      escaped = false
-      gathered.push(c)
-
-      return
-    }
-
-    state_gather(true)
-
-    if(state !== READY) {
-      return
-    }
-
-    stream.queue({
-        type: ATTR
-      , data: {
-            lhs: lhs
-          , rhs: gathered.join('')
-          , cmp: cmp
-        }
-    })
-
-    state = READY
-    lhs = rhs = cmp = null
-    gathered.length = 0
-
-    return 
-  }
-
-  function state_gather(quietly) {
-    if(/[^\d\w\-_]/.test(c) && !escaped) {
-      if(c === '\\') {
-        escaped = true
-      } else {
-        !quietly && stream.queue(token())
-        state = READY
-        --idx
-      }
-
-      return
-    }
-
-    escaped = false
-    gathered.push(c)
-  }
-
-  function token() {
-    var data = gathered.join('')
-
-    gathered.length = 0
-
-    return {
-        type: state
-      , data: data
-    }
-  }
-}
-
-},{"through":104}],106:[function(require,module,exports){
-arguments[4][24][0].apply(exports,arguments)
-},{"dup":24}],107:[function(require,module,exports){
-arguments[4][25][0].apply(exports,arguments)
-},{"./init":108,"./modules/attributes":109,"./modules/style":110,"dup":25}],108:[function(require,module,exports){
-arguments[4][26][0].apply(exports,arguments)
-},{"./container-elements":106,"./parse-selector":111,"./void-elements":112,"dup":26}],109:[function(require,module,exports){
-arguments[4][27][0].apply(exports,arguments)
-},{"../parse-selector":111,"dup":27,"lodash.escape":114,"lodash.forown":116,"lodash.union":128}],110:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"dup":28,"lodash.escape":114,"lodash.forown":116,"lodash.kebabcase":123}],111:[function(require,module,exports){
-arguments[4][29][0].apply(exports,arguments)
-},{"browser-split":113,"dup":29}],112:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"dup":30}],113:[function(require,module,exports){
-arguments[4][23][0].apply(exports,arguments)
-},{"dup":23}],114:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32,"lodash._root":115}],115:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],116:[function(require,module,exports){
-arguments[4][34][0].apply(exports,arguments)
-},{"dup":34,"lodash._basefor":117,"lodash._bindcallback":118,"lodash.keys":119}],117:[function(require,module,exports){
-arguments[4][35][0].apply(exports,arguments)
-},{"dup":35}],118:[function(require,module,exports){
-arguments[4][36][0].apply(exports,arguments)
-},{"dup":36}],119:[function(require,module,exports){
-arguments[4][37][0].apply(exports,arguments)
-},{"dup":37,"lodash._getnative":120,"lodash.isarguments":121,"lodash.isarray":122}],120:[function(require,module,exports){
-arguments[4][38][0].apply(exports,arguments)
-},{"dup":38}],121:[function(require,module,exports){
-arguments[4][39][0].apply(exports,arguments)
-},{"dup":39}],122:[function(require,module,exports){
-arguments[4][40][0].apply(exports,arguments)
-},{"dup":40}],123:[function(require,module,exports){
-arguments[4][41][0].apply(exports,arguments)
-},{"dup":41,"lodash.deburr":124,"lodash.words":126}],124:[function(require,module,exports){
-arguments[4][42][0].apply(exports,arguments)
-},{"dup":42,"lodash._root":125}],125:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],126:[function(require,module,exports){
-arguments[4][44][0].apply(exports,arguments)
-},{"dup":44,"lodash._root":127}],127:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],128:[function(require,module,exports){
-arguments[4][46][0].apply(exports,arguments)
-},{"dup":46,"lodash._baseflatten":129,"lodash._baseuniq":132,"lodash.restparam":137}],129:[function(require,module,exports){
-arguments[4][47][0].apply(exports,arguments)
-},{"dup":47,"lodash.isarguments":130,"lodash.isarray":131}],130:[function(require,module,exports){
-arguments[4][39][0].apply(exports,arguments)
-},{"dup":39}],131:[function(require,module,exports){
-arguments[4][40][0].apply(exports,arguments)
-},{"dup":40}],132:[function(require,module,exports){
-arguments[4][50][0].apply(exports,arguments)
-},{"dup":50,"lodash._baseindexof":133,"lodash._cacheindexof":134,"lodash._createcache":135}],133:[function(require,module,exports){
-arguments[4][51][0].apply(exports,arguments)
-},{"dup":51}],134:[function(require,module,exports){
-arguments[4][52][0].apply(exports,arguments)
-},{"dup":52}],135:[function(require,module,exports){
-arguments[4][53][0].apply(exports,arguments)
-},{"dup":53,"lodash._getnative":136}],136:[function(require,module,exports){
-arguments[4][38][0].apply(exports,arguments)
-},{"dup":38}],137:[function(require,module,exports){
-arguments[4][55][0].apply(exports,arguments)
-},{"dup":55}],138:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-exports.default = function (html) {
-    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-    // If there's nothing here, return null;
-    if (!html) {
-        return null;
-    }
-
-    // Maintain a list of created vnodes so we can call the create hook.
-    var createdVNodes = [];
-
-    // Parse the string into the AST and convert to VNodes.
-    var vnodes = convertNodes((0, _parse2.default)(html), createdVNodes);
-
-    var res = void 0;
-    if (!vnodes) {
-        // If there are no vnodes but there is string content, then the string
-        // must be just text or at least invalid HTML that we should treat as
-        // text (since the AST parser didn't find any well-formed HTML).
-        res = toVNode({ type: 'text', content: html }, createdVNodes);
-    } else if (vnodes.length === 1) {
-        // If there's only one root node, just return it as opposed to an array.
-        res = vnodes[0];
-    } else {
-        // Otherwise we have an array of VNodes, which we should return.
-        res = vnodes;
-    }
-
-    // Call the 'create' hook for each created node.
-    options.hooks && options.hooks.create && createdVNodes.forEach(function (node) {
-        options.hooks.create(node);
-    });
-    return res;
-};
-
-var _parse = require('html-parse-stringify2/lib/parse');
-
-var _parse2 = _interopRequireDefault(_parse);
-
-var _h = require('snabbdom/h');
-
-var _h2 = _interopRequireDefault(_h);
-
-var _utils = require('./utils');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function convertNodes(nodes, createdVNodes) {
-    if (nodes instanceof Array && nodes.length > 0) {
-        return nodes.map(function (node) {
-            return toVNode(node, createdVNodes);
-        });
-    } else {
-        return undefined;
-    }
-}
-
-function toVNode(node, createdVNodes) {
-    var newNode = void 0;
-    if (node.type === 'text') {
-        newNode = (0, _utils.createTextVNode)(node.content);
-    } else {
-        newNode = (0, _h2.default)(node.name, buildVNodeData(node), convertNodes(node.children, createdVNodes));
-    }
-    createdVNodes.push(newNode);
-    return newNode;
-}
-
-function buildVNodeData(node) {
-    var data = {};
-    if (!node.attrs) {
-        return data;
-    }
-
-    var attrs = Object.keys(node.attrs).reduce(function (memo, name) {
-        if (name !== 'style' && name !== 'class') {
-            var val = node.attrs[name];
-            memo ? memo[name] = val : memo = _defineProperty({}, name, val);
-        }
-        return memo;
-    }, null);
-    if (attrs) {
-        data.attrs = attrs;
-    }
-
-    var style = parseStyle(node);
-    if (style) {
-        data.style = style;
-    }
-
-    var classes = parseClass(node);
-    if (classes) {
-        data.class = classes;
-    }
-
-    return data;
-}
-
-function parseStyle(node) {
-    try {
-        return node.attrs.style.split(';').reduce(function (memo, styleProp) {
-            var res = styleProp.split(':');
-            var name = (0, _utils.transformName)(res[0].trim());
-            if (name) {
-                var val = res[1].trim();
-                memo ? memo[name] = val : memo = _defineProperty({}, name, val);
-            }
-            return memo;
-        }, null);
-    } catch (e) {
-        return null;
-    }
-}
-
-function parseClass(node) {
-    try {
-        return node.attrs.class.split(' ').reduce(function (memo, className) {
-            className = className.trim();
-            if (className) {
-                memo ? memo[className] = true : memo = _defineProperty({}, className, true);
-            }
-            return memo;
-        }, null);
-    } catch (e) {
-        return null;
-    }
-}
-},{"./utils":139,"html-parse-stringify2/lib/parse":141,"snabbdom/h":143}],139:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.createTextVNode = createTextVNode;
-exports.transformName = transformName;
-
-var _vnode = require('snabbdom/vnode');
-
-var _vnode2 = _interopRequireDefault(_vnode);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function createTextVNode(text) {
-    return (0, _vnode2.default)(undefined, undefined, undefined, unescape(text));
-}
-
-function transformName(name) {
-    // Replace -a with A to help camel case style property names.
-    name = name.replace(/-(\w)/g, function _replace($1, $2) {
-        return $2.toUpperCase();
-    });
-    // Handle properties that start with a -.
-    var firstChar = name.charAt(0).toLowerCase();
-    return '' + firstChar + name.substring(1);
-}
-
-// Regex for matching HTML entities.
-var entityRegex = new RegExp('&[a-z0-9]+;', 'gi');
-// Element for setting innerHTML for transforming entities.
-var el = document.createElement('div');
-
-function unescape(text) {
-    return text.replace(entityRegex, function (entity) {
-        el.innerHTML = entity;
-        return el.textContent;
-    });
-}
-},{"snabbdom/vnode":145}],140:[function(require,module,exports){
-var attrRE = /([\w-]+)|(['"])(.*?)\2/g;
-
-// create optimized lookup object for
-// void elements as listed here:
-// http://www.w3.org/html/wg/drafts/html/master/syntax.html#void-elements
-var lookup = (Object.create) ? Object.create(null) : {};
-lookup.area = true;
-lookup.base = true;
-lookup.br = true;
-lookup.col = true;
-lookup.embed = true;
-lookup.hr = true;
-lookup.img = true;
-lookup.input = true;
-lookup.keygen = true;
-lookup.link = true;
-lookup.menuitem = true;
-lookup.meta = true;
-lookup.param = true;
-lookup.source = true;
-lookup.track = true;
-lookup.wbr = true;
-
-module.exports = function (tag) {
-    var i = 0;
-    var key;
-    var res = {
-        type: 'tag',
-        name: '',
-        voidElement: false,
-        attrs: {},
-        children: []
-    };
-
-    tag.replace(attrRE, function (match) {
-        if (i % 2) {
-            key = match;
-        } else {
-            if (i === 0) {
-                if (lookup[match] || tag.charAt(tag.length - 2) === '/') {
-                    res.voidElement = true;
-                }
-                res.name = match;
-            } else {
-                res.attrs[key] = match.replace(/^['"]|['"]$/g, '');
-            }
-        }
-        i++;
-    });
-
-    return res;
-};
-
-},{}],141:[function(require,module,exports){
-/*jshint -W030 */
-var tagRE = /<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g;
-var parseTag = require('./parse-tag');
-// re-used obj for quick lookups of components
-var empty = Object.create ? Object.create(null) : {};
-
-module.exports = function parse(html, options) {
-    options || (options = {});
-    options.components || (options.components = empty);
-    var result = [];
-    var current;
-    var level = -1;
-    var arr = [];
-    var byTag = {};
-    var inComponent = false;
-
-    html.replace(tagRE, function (tag, index) {
-        if (inComponent) {
-            if (tag !== ('</' + current.name + '>')) {
-                return;
-            } else {
-                inComponent = false;
-            }
-        }
-        var isOpen = tag.charAt(1) !== '/';
-        var start = index + tag.length;
-        var nextChar = html.charAt(start);
-        var parent;
-
-        if (isOpen) {
-            level++;
-
-            current = parseTag(tag);
-            if (current.type === 'tag' && options.components[current.name]) {
-                current.type = 'component';
-                inComponent = true;
-            }
-
-            if (!current.voidElement && !inComponent && nextChar && nextChar !== '<') {
-                current.children.push({
-                    type: 'text',
-                    content: html.slice(start, html.indexOf('<', start))
-                });
-            }
-
-            byTag[current.tagName] = current;
-
-            // if we're at root, push new base node
-            if (level === 0) {
-                result.push(current);
-            }
-
-            parent = arr[level - 1];
-
-            if (parent) {
-                parent.children.push(current);
-            }
-
-            arr[level] = current;
-        }
-
-        if (!isOpen || current.voidElement) {
-            level--;
-            if (!inComponent && nextChar !== '<' && nextChar) {
-                // trailing text node
-                // if we're at the root, push a base text node. otherwise add as
-                // a child to the current node.
-                parent = level === -1 ? result : arr[level].children;
-
-                // calculate correct end of the content slice in case there's
-                // no tag after the text node.
-                var end = html.indexOf('<', start);
-                var content = html.slice(start, end === -1 ? undefined : end);
-                // if a node is nothing but whitespace, no need to add it.
-                if (!/^\s*$/.test(content)) {
-                    parent.push({
-                        type: 'text',
-                        content: content
-                    });
-                }
-            }
-        }
-    });
-
-    return result;
-};
-
-},{"./parse-tag":140}],142:[function(require,module,exports){
-module.exports = require('./lib/strings');
-
-},{"./lib/strings":138}],143:[function(require,module,exports){
-var VNode = require('./vnode');
-var is = require('./is');
-
-function addNS(data, children) {
-  data.ns = 'http://www.w3.org/2000/svg';
-  if (children !== undefined) {
-    for (var i = 0; i < children.length; ++i) {
-      addNS(children[i].data, children[i].children);
-    }
-  }
-}
-
-module.exports = function h(sel, b, c) {
-  var data = {}, children, text, i;
-  if (c !== undefined) {
-    data = b;
-    if (is.array(c)) { children = c; }
-    else if (is.primitive(c)) { text = c; }
-  } else if (b !== undefined) {
-    if (is.array(b)) { children = b; }
-    else if (is.primitive(b)) { text = b; }
-    else { data = b; }
-  }
-  if (is.array(children)) {
-    for (i = 0; i < children.length; ++i) {
-      if (is.primitive(children[i])) children[i] = VNode(undefined, undefined, undefined, children[i]);
-    }
-  }
-  if (sel[0] === 's' && sel[1] === 'v' && sel[2] === 'g') {
-    addNS(data, children);
-  }
-  return VNode(sel, data, children, text, undefined);
-};
-
-},{"./is":144,"./vnode":145}],144:[function(require,module,exports){
-arguments[4][58][0].apply(exports,arguments)
-},{"dup":58}],145:[function(require,module,exports){
-arguments[4][67][0].apply(exports,arguments)
-},{"dup":67}],146:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -12744,7 +11082,7 @@ exports.MemoryStream = MemoryStream;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Stream;
 
-},{}],147:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 "use strict";
 var core_1 = require('./core');
 exports.Stream = core_1.Stream;
@@ -12752,7 +11090,7 @@ exports.MemoryStream = core_1.MemoryStream;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = core_1.Stream;
 
-},{"./core":146}],148:[function(require,module,exports){
+},{"./core":97}],99:[function(require,module,exports){
 'use strict';
 
 var _xstreamRun = require('@cycle/xstream-run');
@@ -12761,9 +11099,9 @@ var _xstreamRun2 = _interopRequireDefault(_xstreamRun);
 
 var _dom = require('@cycle/dom');
 
-var _snabbdomTemplate = require('snabbdom-template');
+var _ = require('../../../');
 
-var _snabbdomTemplate2 = _interopRequireDefault(_snabbdomTemplate);
+var _2 = _interopRequireDefault(_);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12775,7 +11113,7 @@ function main(sources) {
     DOM: sources.DOM.select('.myinput').events('input').map(function (ev) {
       return ev.target.value;
     }).startWith('').map(function (name) {
-      return (0, _snabbdomTemplate2.default)(template, { '#output': name });
+      return (0, _2.default)(template, { '#output': name });
     }
     /*div([
       label('Name:'),
@@ -12791,4 +11129,1713 @@ _xstreamRun2.default.run(main, {
   DOM: (0, _dom.makeDOMDriver)('#main-container')
 });
 
-},{"@cycle/dom":10,"@cycle/xstream-run":68,"snabbdom-template":97}]},{},[148]);
+},{"../../../":100,"@cycle/dom":10,"@cycle/xstream-run":68}],100:[function(require,module,exports){
+var vTSel = require('snabbdom-selector').default;
+var vToHTML = require('snabbdom-to-html');
+var hToVDOM = require('snabbdom-virtualize/strings').default;
+//var sh = require('snabbdom/h')
+var vNode = require('snabbdom/vnode');
+var vText = function (text) {
+  return vNode(undefined, undefined, undefined, unescape(text));
+};
+
+module.exports = function vDT(templates, contentvars) {
+  var vt;
+  // if arguments are contained in a single object, pull them out
+  if ('object' === typeof templates && !Array.isArray(templates) && undefined === contentvars) {
+    contentvars = templates[Object.keys(templates)[1]];
+    templates = templates[Object.keys(templates)[0]];
+  }
+  contentvars = contentvars || {};
+  if (Array.isArray(templates)) {
+    if (1 < templates.length) {
+      var start = templates.reverse().shift();
+      start = Array.isArray(start) ? vNode('div', {}, start) : start; // wrap div around array of elems
+      vt = templates.reduce(function (prev, next) {
+        var ret = hToVDOM(next);
+        ret = Array.isArray(ret) ? vNode('div', {}, ret) : ret; // wrap div around array of elems
+        var tar = vTSel('.template', ret);
+        if (tar.length) {
+          tar[0].children = prev && prev.children || undefined;
+        } else {
+          console.log('Template selector not found.');
+        }
+        return ret;
+      }, hToVDOM(start));
+      vt = hToVDOM(vToHTML(vt)); // how to clone?
+    } else {
+        vt = hToVDOM(templates[0]);
+        vt = Array.isArray(vt) ? vNode('div', {}, vt) : vt; // wrap div around array of elems
+      }
+  } else if ('object' === typeof templates) {
+      vt = hToVDOM(vToHTML(templates)); // fixes glitch copying templates
+    } else {
+        vt = hToVDOM(templates);
+        vt = Array.isArray(vt) ? vNode('div', {}, vt) : vt; // wrap div around array of elems
+      }
+  if (contentvars.sel && contentvars.data) {
+    // vtree
+    var tar = vTSel('.template', vt);
+    if (tar.length) {
+      tar[0].children = contentvars && [contentvars] || undefined;
+    } else {
+      console.log('Template selector not found.');
+    }
+  } else {
+    Object.keys(contentvars).forEach(function (sel) {
+      var value = contentvars[sel];
+      var target = vTSel(sel, vt);
+      if (target.length) {
+        target = target[0];
+        if ('string' === typeof value || 'number' === typeof value) {
+          target.children = [vText(value)];
+        } else if ('object' === typeof value) {
+          Object.keys(value).forEach(function (prop) {
+            var targetprops = target.data.attrs = target.data.attrs || {};
+            var valprop = value[prop];
+            if ('_html' === prop) {
+              target.children = [vText(valprop)];
+            } else if ('_append' === prop) {
+              target.children.push(vText(valprop));
+            } else if ('_prepend' === prop) {
+              target.children.unshift(vText(valprop));
+            } else if (/^_map/.test(prop) && 'object' === typeof valprop && null !== valprop) {
+              Object.keys(valprop).forEach(function (mapkey) {
+                var subtmpl = hToVDOM(vToHTML(vTSel(mapkey, target)[0])); // how else to clone?
+                if ('_map' === prop) {
+                  target.children = [];
+                }
+                valprop[mapkey].forEach(function (cvars) {
+                  var mapd;
+                  if ('string' === typeof cvars) {
+                    subtmpl.children = [vText(cvars)];
+                    mapd = hToVDOM(vToHTML(subtmpl)); // how to clone?
+                  } else if ('object' === typeof cvars) {
+                      mapd = vDT(subtmpl, cvars);
+                    }
+                  switch (prop) {
+                    case '_mapprepend':
+                      target.children.unshift(mapd);break;
+                    default:
+                      target.children.push(mapd);break;
+                  }
+                });
+              });
+            } else {
+              var cur = targetprops[prop] || '';
+              if (valprop && 'object' === typeof valprop && null !== valprop) {
+                if (valprop.append) {
+                  cur += valprop.append;
+                } else if (valprop.prepend) {
+                  cur = valprop.prepend + cur;
+                }
+              } else {
+                cur = valprop;
+              }
+              targetprops[prop] = cur;
+            }
+          });
+        } else if ('function' === typeof value) {
+          target.children[0].text = value(target.children[0].text);
+        }
+      } // end if target
+      else {
+          console.log('Selector not found. ', sel);
+        }
+    });
+  }
+  return vt;
+};
+
+},{"snabbdom-selector":104,"snabbdom-to-html":112,"snabbdom-virtualize/strings":145,"snabbdom/vnode":148}],101:[function(require,module,exports){
+var attrRE = /([\w-]+)|=|(['"])([.\s\S]*?)\2/g;
+var voidElements = require('void-elements');
+
+module.exports = function (tag) {
+    var i = 0;
+    var key;
+    var expectingValueAfterEquals = true;
+    var res = {
+        type: 'tag',
+        name: '',
+        voidElement: false,
+        attrs: {},
+        children: []
+    };
+
+    tag.replace(attrRE, function (match) {
+        if (match === '=') {
+            expectingValueAfterEquals = true;
+            i++;
+            return;
+        }
+
+        if (!expectingValueAfterEquals) {
+            if (key) {
+                res.attrs[key] = key; // boolean attribute
+            }
+            key=match;
+        } else {
+            if (i === 0) {
+                if (voidElements[match] || tag.charAt(tag.length - 2) === '/') {
+                    res.voidElement = true;
+                }
+                res.name = match;
+            } else {
+                res.attrs[key] = match.replace(/^['"]|['"]$/g, '');
+                key=undefined;
+            }
+        }
+        i++;
+        expectingValueAfterEquals = false;
+    });
+
+    return res;
+};
+
+},{"void-elements":149}],102:[function(require,module,exports){
+/*jshint -W030 */
+var tagRE = /(?:<!--[\S\s]*?-->|<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>)/g;
+var parseTag = require('./parse-tag');
+// re-used obj for quick lookups of components
+var empty = Object.create ? Object.create(null) : {};
+// common logic for pushing a child node onto a list
+function pushTextNode(list, html, level, start, ignoreWhitespace) {
+    // calculate correct end of the content slice in case there's
+    // no tag after the text node.
+    var end = html.indexOf('<', start);
+    var content = html.slice(start, end === -1 ? undefined : end);
+    // if a node is nothing but whitespace, collapse it as the spec states:
+    // https://www.w3.org/TR/html4/struct/text.html#h-9.1
+    if (/^\s*$/.test(content)) {
+        content = ' ';
+    }
+    // don't add whitespace-only text nodes if they would be trailing text nodes
+    // or if they would be leading whitespace-only text nodes:
+    //  * end > -1 indicates this is not a trailing text node
+    //  * leading node is when level is -1 and list has length 0
+    if ((!ignoreWhitespace && end > -1 && level + list.length >= 0) || content !== ' ') {
+        list.push({
+            type: 'text',
+            content: content
+        });
+    }
+}
+
+module.exports = function parse(html, options) {
+    options || (options = {});
+    options.components || (options.components = empty);
+    var result = [];
+    var current;
+    var level = -1;
+    var arr = [];
+    var byTag = {};
+    var inComponent = false;
+
+    html.replace(tagRE, function (tag, index) {
+        if (inComponent) {
+            if (tag !== ('</' + current.name + '>')) {
+                return;
+            } else {
+                inComponent = false;
+            }
+        }
+
+        var isOpen = tag.charAt(1) !== '/';
+        var isComment = tag.indexOf('<!--') === 0;
+        var start = index + tag.length;
+        var nextChar = html.charAt(start);
+        var parent;
+
+        if (isOpen && !isComment) {
+            level++;
+
+            current = parseTag(tag);
+            if (current.type === 'tag' && options.components[current.name]) {
+                current.type = 'component';
+                inComponent = true;
+            }
+
+            if (!current.voidElement && !inComponent && nextChar && nextChar !== '<') {
+                pushTextNode(current.children, html, level, start, options.ignoreWhitespace);
+            }
+
+            byTag[current.tagName] = current;
+
+            // if we're at root, push new base node
+            if (level === 0) {
+                result.push(current);
+            }
+
+            parent = arr[level - 1];
+
+            if (parent) {
+                parent.children.push(current);
+            }
+
+            arr[level] = current;
+        }
+
+        if (isComment || !isOpen || current.voidElement) {
+            if (!isComment) {
+                level--;
+            }
+            if (!inComponent && nextChar !== '<' && nextChar) {
+                // trailing text node
+                // if we're at the root, push a base text node. otherwise add as
+                // a child to the current node.
+                parent = level === -1 ? result : arr[level].children;
+                pushTextNode(parent, html, level, start, options.ignoreWhitespace);
+            }
+        }
+    });
+
+    // If the "html" passed isn't actually html, add it as a text node.
+    if (!result.length && html.length) {
+        pushTextNode(result, html, 0, 0, options.ignoreWhitespace);
+    }
+
+    return result;
+};
+
+},{"./parse-tag":101}],103:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = classNameFromVNode;
+
+var _selectorParser2 = require('./selectorParser');
+
+var _selectorParser3 = _interopRequireDefault(_selectorParser2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function classNameFromVNode(vNode) {
+  var _selectorParser = (0, _selectorParser3.default)(vNode.sel);
+
+  var cn = _selectorParser.className;
+
+
+  if (!vNode.data) {
+    return cn;
+  }
+
+  var _vNode$data = vNode.data;
+  var dataClass = _vNode$data.class;
+  var props = _vNode$data.props;
+
+
+  if (dataClass) {
+    var c = Object.keys(vNode.data.class).filter(function (cl) {
+      return vNode.data.class[cl];
+    });
+    cn += ' ' + c.join(' ');
+  }
+
+  if (props && props.className) {
+    cn += ' ' + props.className;
+  }
+
+  return cn.trim();
+}
+},{"./selectorParser":106}],104:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _language = require('./language');
+
+var _language2 = _interopRequireDefault(_language);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function traverse(vNode, fn) {
+  fn(vNode);
+  if (vNode.children) {
+    vNode.children.forEach(function (child) {
+      traverse(child, fn);
+    });
+  }
+}
+
+function wrapVNode(vNode, parent) {
+  var children = vNode.children;
+
+  if (children && typeof children.map === 'function') {
+    children = children.map(function (k) {
+      return wrapVNode(k, vNode);
+    });
+  }
+  vNode.parent = parent;
+  return vNode;
+}
+
+function match(sel, vNode) {
+  var selector = (0, _language2.default)(sel);
+  var matched = [];
+
+  var wrappedVNode = wrapVNode(vNode);
+
+  traverse(wrappedVNode, function (node) {
+    var result = void 0;
+    if (node.data && node.data.vnode) {
+      result = selector(node.data.vnode);
+    } else if (node.data && node.data.fn) {
+      var _node$data;
+
+      result = selector((_node$data = node.data).fn.apply(_node$data, _toConsumableArray(node.data.args)));
+    } else {
+      result = selector(node);
+    }
+    if (result) {
+      if (!Array.isArray(result)) {
+        result = [result];
+      }
+      matched.push.apply(matched, result);
+    }
+  });
+  return matched;
+}
+
+exports.default = match;
+},{"./language":105}],105:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _cssauron = require('cssauron');
+
+var _cssauron2 = _interopRequireDefault(_cssauron);
+
+var _selectorParser = require('./selectorParser');
+
+var _selectorParser2 = _interopRequireDefault(_selectorParser);
+
+var _classNameFromVNode = require('./classNameFromVNode');
+
+var _classNameFromVNode2 = _interopRequireDefault(_classNameFromVNode);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function LanguageSpecification() {}
+
+LanguageSpecification.prototype.tag = function tag(vNode) {
+  return (0, _selectorParser2.default)(vNode.sel).tagName;
+};
+
+LanguageSpecification.prototype.class = function klass(vNode) {
+  return (0, _classNameFromVNode2.default)(vNode);
+};
+
+LanguageSpecification.prototype.id = function id(vNode) {
+  if (vNode.data && vNode.data.props && vNode.data.props.id) {
+    return vNode.data.props.id;
+  } else if (vNode.data && vNode.data.attrs && vNode.data.attrs.id) {
+    return vNode.data.attrs.id;
+  }
+  return (0, _selectorParser2.default)(vNode.sel).id;
+};
+
+LanguageSpecification.prototype.children = function children(vNode) {
+  return vNode.children || [];
+};
+
+LanguageSpecification.prototype.parent = function parent(vNode) {
+  return vNode.parent || vNode;
+};
+
+LanguageSpecification.prototype.contents = function contents(vNode) {
+  return vNode.text;
+};
+
+LanguageSpecification.prototype.attr = function attributes(vNode, attr) {
+  if (vNode.data) {
+    var _vNode$data = vNode.data;
+    var _vNode$data$attrs = _vNode$data.attrs;
+    var attrs = _vNode$data$attrs === undefined ? {} : _vNode$data$attrs;
+    var _vNode$data$props = _vNode$data.props;
+    var props = _vNode$data$props === undefined ? {} : _vNode$data$props;
+
+    if (attrs[attr]) {
+      return attrs[attr];
+    }
+    if (props[attr]) {
+      return props[attr];
+    }
+  }
+};
+
+var language = (0, _cssauron2.default)(new LanguageSpecification());
+
+exports.default = language;
+},{"./classNameFromVNode":103,"./selectorParser":106,"cssauron":108}],106:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = selectorParser;
+
+var _browserSplit = require('browser-split');
+
+var _browserSplit2 = _interopRequireDefault(_browserSplit);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var classIdSplit = /([\.#]?[a-zA-Z0-9\u007F-\uFFFF_:-]+)/;
+var notClassId = /^\.|#/;
+
+function selectorParser() {
+  var selector = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+
+  var tagName = void 0;
+  var id = '';
+  var classes = [];
+
+  var tagParts = (0, _browserSplit2.default)(selector, classIdSplit);
+
+  if (notClassId.test(tagParts[1]) || selector === '') {
+    tagName = 'div';
+  }
+
+  var part = void 0;
+  var type = void 0;
+  var i = void 0;
+
+  for (i = 0; i < tagParts.length; i++) {
+    part = tagParts[i];
+
+    if (!part) {
+      continue;
+    }
+
+    type = part.charAt(0);
+
+    if (!tagName) {
+      tagName = part;
+    } else if (type === '.') {
+      classes.push(part.substring(1, part.length));
+    } else if (type === '#') {
+      id = part.substring(1, part.length);
+    }
+  }
+
+  return {
+    tagName: tagName,
+    id: id,
+    className: classes.join(' ')
+  };
+}
+},{"browser-split":107}],107:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"dup":23}],108:[function(require,module,exports){
+module.exports = language
+
+var tokenizer = require('./tokenizer')
+
+function language(lookups, matchComparison) {
+  return function(selector) {
+    return parse(selector, remap(lookups),
+                 matchComparison || caseSensitiveComparison)
+  }
+}
+
+function remap(opts) {
+  for(var key in opts) if(opt_okay(opts, key)) {
+    opts[key] = Function(
+        'return function(node, attr) { return node.' + opts[key] + ' }'
+    )
+    opts[key] = opts[key]()
+  }
+
+  return opts
+}
+
+function opt_okay(opts, key) {
+  return opts.hasOwnProperty(key) && typeof opts[key] === 'string'
+}
+
+function parse(selector, options, matchComparison) {
+  var stream = tokenizer()
+    , default_subj = true
+    , selectors = [[]]
+    , traversal
+    , bits
+
+  bits = selectors[0]
+
+  traversal = {
+      '': any_parents
+    , '>': direct_parent
+    , '+': direct_sibling
+    , '~': any_sibling
+  }
+
+  stream
+    .on('data', group)
+    .end(selector)
+
+  function group(token) {
+    var crnt
+
+    if(token.type === 'comma') {
+      selectors.unshift(bits = [])
+
+      return
+    }
+
+    if(token.type === 'op' || token.type === 'any-child') {
+      bits.unshift(traversal[token.data])
+      bits.unshift(check())
+
+      return
+    }
+
+    bits[0] = bits[0] || check()
+    crnt = bits[0]
+
+    if(token.type === '!') {
+      crnt.subject =
+      selectors[0].subject = true
+
+      return
+    }
+
+    crnt.push(
+        token.type === 'class' ? listContains(token.type, token.data) :
+        token.type === 'attr' ? attr(token) :
+        token.type === ':' || token.type === '::' ? pseudo(token) :
+        token.type === '*' ? Boolean :
+        matches(token.type, token.data, matchComparison)
+    )
+  }
+
+  return selector_fn
+
+  function selector_fn(node, as_boolean) {
+    var current
+      , length
+      , orig
+      , subj
+      , set
+
+    orig = node
+    set = []
+
+    for(var i = 0, len = selectors.length; i < len; ++i) {
+      bits = selectors[i]
+      current = entry
+      length = bits.length
+      node = orig
+      subj = []
+
+      for(var j = 0; j < length; j += 2) {
+        node = current(node, bits[j], subj)
+
+        if(!node) {
+          break
+        }
+
+        current = bits[j + 1]
+      }
+
+      if(j >= length) {
+        if(as_boolean) {
+          return true
+        }
+
+        add(!bits.subject ? [orig] : subj)
+      }
+    }
+
+    if(as_boolean) {
+      return false
+    }
+
+    return !set.length ? false :
+            set.length === 1 ? set[0] :
+            set
+
+    function add(items) {
+      var next
+
+      while(items.length) {
+        next = items.shift()
+
+        if(set.indexOf(next) === -1) {
+          set.push(next)
+        }
+      }
+    }
+  }
+
+  function check() {
+    _check.bits = []
+    _check.subject = false
+    _check.push = function(token) {
+      _check.bits.push(token)
+    }
+
+    return _check
+
+    function _check(node, subj) {
+      for(var i = 0, len = _check.bits.length; i < len; ++i) {
+        if(!_check.bits[i](node)) {
+          return false
+        }
+      }
+
+      if(_check.subject) {
+        subj.push(node)
+      }
+
+      return true
+    }
+  }
+
+  function listContains(type, data) {
+    return function(node) {
+      var val = options[type](node)
+      val =
+        Array.isArray(val) ? val :
+        val ? val.toString().split(/\s+/) :
+        []
+      return val.indexOf(data) >= 0
+    }
+  }
+
+  function attr(token) {
+    return token.data.lhs ?
+      valid_attr(
+          options.attr
+        , token.data.lhs
+        , token.data.cmp
+        , token.data.rhs
+      ) :
+      valid_attr(options.attr, token.data)
+  }
+
+  function matches(type, data, matchComparison) {
+    return function(node) {
+      return matchComparison(type, options[type](node), data);
+    }
+  }
+
+  function any_parents(node, next, subj) {
+    do {
+      node = options.parent(node)
+    } while(node && !next(node, subj))
+
+    return node
+  }
+
+  function direct_parent(node, next, subj) {
+    node = options.parent(node)
+
+    return node && next(node, subj) ? node : null
+  }
+
+  function direct_sibling(node, next, subj) {
+    var parent = options.parent(node)
+      , idx = 0
+      , children
+
+    children = options.children(parent)
+
+    for(var i = 0, len = children.length; i < len; ++i) {
+      if(children[i] === node) {
+        idx = i
+
+        break
+      }
+    }
+
+    return children[idx - 1] && next(children[idx - 1], subj) ?
+      children[idx - 1] :
+      null
+  }
+
+  function any_sibling(node, next, subj) {
+    var parent = options.parent(node)
+      , children
+
+    children = options.children(parent)
+
+    for(var i = 0, len = children.length; i < len; ++i) {
+      if(children[i] === node) {
+        return null
+      }
+
+      if(next(children[i], subj)) {
+        return children[i]
+      }
+    }
+
+    return null
+  }
+
+  function pseudo(token) {
+    return valid_pseudo(options, token.data, matchComparison)
+  }
+
+}
+
+function entry(node, next, subj) {
+  return next(node, subj) ? node : null
+}
+
+function valid_pseudo(options, match, matchComparison) {
+  switch(match) {
+    case 'empty': return valid_empty(options)
+    case 'first-child': return valid_first_child(options)
+    case 'last-child': return valid_last_child(options)
+    case 'root': return valid_root(options)
+  }
+
+  if(match.indexOf('contains') === 0) {
+    return valid_contains(options, match.slice(9, -1))
+  }
+
+  if(match.indexOf('any') === 0) {
+    return valid_any_match(options, match.slice(4, -1), matchComparison)
+  }
+
+  if(match.indexOf('not') === 0) {
+    return valid_not_match(options, match.slice(4, -1), matchComparison)
+  }
+
+  if(match.indexOf('nth-child') === 0) {
+    return valid_nth_child(options, match.slice(10, -1))
+  }
+
+  return function() {
+    return false
+  }
+}
+
+function valid_not_match(options, selector, matchComparison) {
+  var fn = parse(selector, options, matchComparison)
+
+  return not_function
+
+  function not_function(node) {
+    return !fn(node, true)
+  }
+}
+
+function valid_any_match(options, selector, matchComparison) {
+  var fn = parse(selector, options, matchComparison)
+
+  return fn
+}
+
+function valid_attr(fn, lhs, cmp, rhs) {
+  return function(node) {
+    var attr = fn(node, lhs)
+
+    if(!cmp) {
+      return !!attr
+    }
+
+    if(cmp.length === 1) {
+      return attr == rhs
+    }
+
+    if(attr === void 0 || attr === null) {
+      return false
+    }
+
+    return checkattr[cmp.charAt(0)](attr, rhs)
+  }
+}
+
+function valid_first_child(options) {
+  return function(node) {
+    return options.children(options.parent(node))[0] === node
+  }
+}
+
+function valid_last_child(options) {
+  return function(node) {
+    var children = options.children(options.parent(node))
+
+    return children[children.length - 1] === node
+  }
+}
+
+function valid_empty(options) {
+  return function(node) {
+    return options.children(node).length === 0
+  }
+}
+
+function valid_root(options) {
+  return function(node) {
+    return !options.parent(node)
+  }
+}
+
+function valid_contains(options, contents) {
+  return function(node) {
+    return options.contents(node).indexOf(contents) !== -1
+  }
+}
+
+function valid_nth_child(options, nth) {
+  var test = function(){ return false }
+  if (nth == 'odd') {
+    nth = '2n+1'
+  } else if (nth == 'even') {
+    nth = '2n'
+  }
+  var regexp = /( ?([-|\+])?(\d*)n)? ?((\+|-)? ?(\d+))? ?/
+  var matches = nth.match(regexp)
+  if (matches) {
+    var growth = 0;
+    if (matches[1]) {
+      var positiveGrowth = (matches[2] != '-')
+      growth = parseInt(matches[3] == '' ? 1 : matches[3])
+      growth = growth * (positiveGrowth ? 1 : -1)
+    }
+    var offset = 0
+    if (matches[4]) {
+      offset = parseInt(matches[6])
+      var positiveOffset = (matches[5] != '-')
+      offset = offset * (positiveOffset ? 1 : -1)
+    }
+    if (growth == 0) {
+      if (offset != 0) {
+        test = function(children, node) {
+          return children[offset - 1] === node
+        }
+      }
+    } else {
+      test = function(children, node) {
+        var validPositions = []
+        var len = children.length
+        for (var position=1; position <= len; position++) {
+          var divisible = ((position - offset) % growth) == 0;
+          if (divisible) {
+            if (growth > 0) {
+              validPositions.push(position);
+            } else {
+              if ((position - offset) / growth >= 0) {
+                validPositions.push(position);
+              }
+            }
+          }
+        }
+        for(var i=0; i < validPositions.length; i++) {
+          if (children[validPositions[i] - 1] === node) {
+            return true
+          }
+        }
+        return false
+      }
+    }
+  }
+  return function(node) {
+    var children = options.children(options.parent(node))
+
+    return test(children, node)
+  }
+}
+
+var checkattr = {
+    '$': check_end
+  , '^': check_beg
+  , '*': check_any
+  , '~': check_spc
+  , '|': check_dsh
+}
+
+function check_end(l, r) {
+  return l.slice(l.length - r.length) === r
+}
+
+function check_beg(l, r) {
+  return l.slice(0, r.length) === r
+}
+
+function check_any(l, r) {
+  return l.indexOf(r) > -1
+}
+
+function check_spc(l, r) {
+  return l.split(/\s+/).indexOf(r) > -1
+}
+
+function check_dsh(l, r) {
+  return l.split('-').indexOf(r) > -1
+}
+
+function caseSensitiveComparison(type, pattern, data) {
+  return pattern === data;
+}
+
+},{"./tokenizer":110}],109:[function(require,module,exports){
+(function (process){
+var Stream = require('stream')
+
+// through
+//
+// a stream that does nothing but re-emit the input.
+// useful for aggregating a series of changing but not ending streams into one stream)
+
+exports = module.exports = through
+through.through = through
+
+//create a readable writable stream.
+
+function through (write, end, opts) {
+  write = write || function (data) { this.queue(data) }
+  end = end || function () { this.queue(null) }
+
+  var ended = false, destroyed = false, buffer = [], _ended = false
+  var stream = new Stream()
+  stream.readable = stream.writable = true
+  stream.paused = false
+
+//  stream.autoPause   = !(opts && opts.autoPause   === false)
+  stream.autoDestroy = !(opts && opts.autoDestroy === false)
+
+  stream.write = function (data) {
+    write.call(this, data)
+    return !stream.paused
+  }
+
+  function drain() {
+    while(buffer.length && !stream.paused) {
+      var data = buffer.shift()
+      if(null === data)
+        return stream.emit('end')
+      else
+        stream.emit('data', data)
+    }
+  }
+
+  stream.queue = stream.push = function (data) {
+//    console.error(ended)
+    if(_ended) return stream
+    if(data === null) _ended = true
+    buffer.push(data)
+    drain()
+    return stream
+  }
+
+  //this will be registered as the first 'end' listener
+  //must call destroy next tick, to make sure we're after any
+  //stream piped from here.
+  //this is only a problem if end is not emitted synchronously.
+  //a nicer way to do this is to make sure this is the last listener for 'end'
+
+  stream.on('end', function () {
+    stream.readable = false
+    if(!stream.writable && stream.autoDestroy)
+      process.nextTick(function () {
+        stream.destroy()
+      })
+  })
+
+  function _end () {
+    stream.writable = false
+    end.call(stream)
+    if(!stream.readable && stream.autoDestroy)
+      stream.destroy()
+  }
+
+  stream.end = function (data) {
+    if(ended) return
+    ended = true
+    if(arguments.length) stream.write(data)
+    _end() // will emit or queue
+    return stream
+  }
+
+  stream.destroy = function () {
+    if(destroyed) return
+    destroyed = true
+    ended = true
+    buffer.length = 0
+    stream.writable = stream.readable = false
+    stream.emit('close')
+    return stream
+  }
+
+  stream.pause = function () {
+    if(stream.paused) return
+    stream.paused = true
+    return stream
+  }
+
+  stream.resume = function () {
+    if(stream.paused) {
+      stream.paused = false
+      stream.emit('resume')
+    }
+    drain()
+    //may have become paused again,
+    //as drain emits 'data'.
+    if(!stream.paused)
+      stream.emit('drain')
+    return stream
+  }
+  return stream
+}
+
+
+}).call(this,require('_process'))
+},{"_process":79,"stream":95}],110:[function(require,module,exports){
+module.exports = tokenize
+
+var through = require('through')
+
+var PSEUDOSTART = 'pseudo-start'
+  , ATTR_START = 'attr-start'
+  , ANY_CHILD = 'any-child'
+  , ATTR_COMP = 'attr-comp'
+  , ATTR_END = 'attr-end'
+  , PSEUDOPSEUDO = '::'
+  , PSEUDOCLASS = ':'
+  , READY = '(ready)'
+  , OPERATION = 'op'
+  , CLASS = 'class'
+  , COMMA = 'comma'
+  , ATTR = 'attr'
+  , SUBJECT = '!'
+  , TAG = 'tag'
+  , STAR = '*'
+  , ID = 'id'
+
+function tokenize() {
+  var escaped = false
+    , gathered = []
+    , state = READY 
+    , data = []
+    , idx = 0
+    , stream
+    , length
+    , quote
+    , depth
+    , lhs
+    , rhs
+    , cmp
+    , c
+
+  return stream = through(ondata, onend)
+
+  function ondata(chunk) {
+    data = data.concat(chunk.split(''))
+    length = data.length
+
+    while(idx < length && (c = data[idx++])) {
+      switch(state) {
+        case READY: state_ready(); break
+        case ANY_CHILD: state_any_child(); break
+        case OPERATION: state_op(); break
+        case ATTR_START: state_attr_start(); break
+        case ATTR_COMP: state_attr_compare(); break
+        case ATTR_END: state_attr_end(); break
+        case PSEUDOCLASS:
+        case PSEUDOPSEUDO: state_pseudo(); break
+        case PSEUDOSTART: state_pseudostart(); break
+        case ID:
+        case TAG:
+        case CLASS: state_gather(); break
+      }
+    }
+
+    data = data.slice(idx)
+  }
+
+  function onend(chunk) {
+    if(arguments.length) {
+      ondata(chunk)
+    }
+
+    if(gathered.length) {
+      stream.queue(token())
+    }
+  }
+
+  function state_ready() {
+    switch(true) {
+      case '#' === c: state = ID; break
+      case '.' === c: state = CLASS; break
+      case ':' === c: state = PSEUDOCLASS; break
+      case '[' === c: state = ATTR_START; break
+      case '!' === c: subject(); break
+      case '*' === c: star(); break
+      case ',' === c: comma(); break
+      case /[>\+~]/.test(c): state = OPERATION; break
+      case /\s/.test(c): state = ANY_CHILD; break
+      case /[\w\d\-_]/.test(c): state = TAG; --idx; break
+    }
+  }
+
+  function subject() {
+    state = SUBJECT
+    gathered = ['!']
+    stream.queue(token())
+    state = READY
+  }
+
+  function star() {
+    state = STAR
+    gathered = ['*']
+    stream.queue(token())
+    state = READY
+  }
+
+  function comma() {
+    state = COMMA
+    gathered = [',']
+    stream.queue(token())
+    state = READY
+  }
+
+  function state_op() {
+    if(/[>\+~]/.test(c)) {
+      return gathered.push(c)
+    }
+
+    // chomp down the following whitespace.
+    if(/\s/.test(c)) {
+      return
+    }
+
+    stream.queue(token())
+    state = READY
+    --idx
+  }
+
+  function state_any_child() {
+    if(/\s/.test(c)) {
+      return
+    }
+
+    if(/[>\+~]/.test(c)) {
+      return --idx, state = OPERATION
+    }
+
+    stream.queue(token())
+    state = READY
+    --idx
+  }
+
+  function state_pseudo() {
+    rhs = state
+    state_gather(true)
+
+    if(state !== READY) {
+      return
+    }
+
+    if(c === '(') {
+      lhs = gathered.join('')
+      state = PSEUDOSTART
+      gathered.length = 0
+      depth = 1
+      ++idx
+
+      return
+    }
+
+    state = PSEUDOCLASS
+    stream.queue(token())
+    state = READY
+  }
+
+  function state_pseudostart() {
+    if(gathered.length === 0 && !quote) {
+      quote = /['"]/.test(c) ? c : null
+
+      if(quote) {
+        return
+      }
+    }
+
+    if(quote) {
+      if(!escaped && c === quote) {
+        quote = null
+
+        return
+      }
+
+      if(c === '\\') {
+        escaped ? gathered.push(c) : (escaped = true)
+
+        return
+      }
+
+      escaped = false
+      gathered.push(c)
+
+      return
+    }
+
+    gathered.push(c)
+
+    if(c === '(') {
+      ++depth
+    } else if(c === ')') {
+      --depth
+    }
+    
+    if(!depth) {
+      gathered.pop()
+      stream.queue({
+          type: rhs 
+        , data: lhs + '(' + gathered.join('') + ')'
+      })
+
+      state = READY
+      lhs = rhs = cmp = null
+      gathered.length = 0
+    }
+
+    return 
+  }
+
+  function state_attr_start() {
+    state_gather(true)
+
+    if(state !== READY) {
+      return
+    }
+
+    if(c === ']') {
+      state = ATTR
+      stream.queue(token())
+      state = READY
+
+      return
+    }
+
+    lhs = gathered.join('')
+    gathered.length = 0
+    state = ATTR_COMP
+  }
+
+  function state_attr_compare() {
+    if(/[=~|$^*]/.test(c)) {
+      gathered.push(c)
+    }
+
+    if(gathered.length === 2 || c === '=') {
+      cmp = gathered.join('')
+      gathered.length = 0
+      state = ATTR_END
+      quote = null
+
+      return
+    }
+  }
+
+  function state_attr_end() {
+    if(!gathered.length && !quote) {
+      quote = /['"]/.test(c) ? c : null
+
+      if(quote) {
+        return
+      }
+    }
+
+    if(quote) {
+      if(!escaped && c === quote) {
+        quote = null
+
+        return
+      }
+
+      if(c === '\\') {
+        if(escaped) {
+          gathered.push(c)
+        }
+
+        escaped = !escaped
+
+        return
+      }
+
+      escaped = false
+      gathered.push(c)
+
+      return
+    }
+
+    state_gather(true)
+
+    if(state !== READY) {
+      return
+    }
+
+    stream.queue({
+        type: ATTR
+      , data: {
+            lhs: lhs
+          , rhs: gathered.join('')
+          , cmp: cmp
+        }
+    })
+
+    state = READY
+    lhs = rhs = cmp = null
+    gathered.length = 0
+
+    return 
+  }
+
+  function state_gather(quietly) {
+    if(/[^\d\w\-_]/.test(c) && !escaped) {
+      if(c === '\\') {
+        escaped = true
+      } else {
+        !quietly && stream.queue(token())
+        state = READY
+        --idx
+      }
+
+      return
+    }
+
+    escaped = false
+    gathered.push(c)
+  }
+
+  function token() {
+    var data = gathered.join('')
+
+    gathered.length = 0
+
+    return {
+        type: state
+      , data: data
+    }
+  }
+}
+
+},{"through":109}],111:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"dup":24}],112:[function(require,module,exports){
+arguments[4][25][0].apply(exports,arguments)
+},{"./init":113,"./modules/attributes":114,"./modules/style":115,"dup":25}],113:[function(require,module,exports){
+arguments[4][26][0].apply(exports,arguments)
+},{"./container-elements":111,"./parse-selector":116,"./void-elements":117,"dup":26}],114:[function(require,module,exports){
+arguments[4][27][0].apply(exports,arguments)
+},{"../parse-selector":116,"dup":27,"lodash.escape":119,"lodash.forown":121,"lodash.union":133}],115:[function(require,module,exports){
+arguments[4][28][0].apply(exports,arguments)
+},{"dup":28,"lodash.escape":119,"lodash.forown":121,"lodash.kebabcase":128}],116:[function(require,module,exports){
+arguments[4][29][0].apply(exports,arguments)
+},{"browser-split":118,"dup":29}],117:[function(require,module,exports){
+arguments[4][30][0].apply(exports,arguments)
+},{"dup":30}],118:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"dup":23}],119:[function(require,module,exports){
+arguments[4][32][0].apply(exports,arguments)
+},{"dup":32,"lodash._root":120}],120:[function(require,module,exports){
+arguments[4][33][0].apply(exports,arguments)
+},{"dup":33}],121:[function(require,module,exports){
+arguments[4][34][0].apply(exports,arguments)
+},{"dup":34,"lodash._basefor":122,"lodash._bindcallback":123,"lodash.keys":124}],122:[function(require,module,exports){
+arguments[4][35][0].apply(exports,arguments)
+},{"dup":35}],123:[function(require,module,exports){
+arguments[4][36][0].apply(exports,arguments)
+},{"dup":36}],124:[function(require,module,exports){
+arguments[4][37][0].apply(exports,arguments)
+},{"dup":37,"lodash._getnative":125,"lodash.isarguments":126,"lodash.isarray":127}],125:[function(require,module,exports){
+arguments[4][38][0].apply(exports,arguments)
+},{"dup":38}],126:[function(require,module,exports){
+arguments[4][39][0].apply(exports,arguments)
+},{"dup":39}],127:[function(require,module,exports){
+arguments[4][40][0].apply(exports,arguments)
+},{"dup":40}],128:[function(require,module,exports){
+arguments[4][41][0].apply(exports,arguments)
+},{"dup":41,"lodash.deburr":129,"lodash.words":131}],129:[function(require,module,exports){
+arguments[4][42][0].apply(exports,arguments)
+},{"dup":42,"lodash._root":130}],130:[function(require,module,exports){
+arguments[4][33][0].apply(exports,arguments)
+},{"dup":33}],131:[function(require,module,exports){
+arguments[4][44][0].apply(exports,arguments)
+},{"dup":44,"lodash._root":132}],132:[function(require,module,exports){
+arguments[4][33][0].apply(exports,arguments)
+},{"dup":33}],133:[function(require,module,exports){
+arguments[4][46][0].apply(exports,arguments)
+},{"dup":46,"lodash._baseflatten":134,"lodash._baseuniq":137,"lodash.restparam":142}],134:[function(require,module,exports){
+arguments[4][47][0].apply(exports,arguments)
+},{"dup":47,"lodash.isarguments":135,"lodash.isarray":136}],135:[function(require,module,exports){
+arguments[4][39][0].apply(exports,arguments)
+},{"dup":39}],136:[function(require,module,exports){
+arguments[4][40][0].apply(exports,arguments)
+},{"dup":40}],137:[function(require,module,exports){
+arguments[4][50][0].apply(exports,arguments)
+},{"dup":50,"lodash._baseindexof":138,"lodash._cacheindexof":139,"lodash._createcache":140}],138:[function(require,module,exports){
+arguments[4][51][0].apply(exports,arguments)
+},{"dup":51}],139:[function(require,module,exports){
+arguments[4][52][0].apply(exports,arguments)
+},{"dup":52}],140:[function(require,module,exports){
+arguments[4][53][0].apply(exports,arguments)
+},{"dup":53,"lodash._getnative":141}],141:[function(require,module,exports){
+arguments[4][38][0].apply(exports,arguments)
+},{"dup":38}],142:[function(require,module,exports){
+arguments[4][55][0].apply(exports,arguments)
+},{"dup":55}],143:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.default = function (html) {
+    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+
+    var context = options.context || document;
+
+    // If there's nothing here, return null;
+    if (!html) {
+        return null;
+    }
+
+    // Maintain a list of created vnodes so we can call the create hook.
+    var createdVNodes = [];
+
+    // Parse the string into the AST and convert to VNodes.
+    var vnodes = convertNodes((0, _parse2.default)(html), createdVNodes, context);
+
+    var res = void 0;
+    if (!vnodes) {
+        // If there are no vnodes but there is string content, then the string
+        // must be just text or at least invalid HTML that we should treat as
+        // text (since the AST parser didn't find any well-formed HTML).
+        res = toVNode({ type: 'text', content: html }, createdVNodes, context);
+    } else if (vnodes.length === 1) {
+        // If there's only one root node, just return it as opposed to an array.
+        res = vnodes[0];
+    } else {
+        // Otherwise we have an array of VNodes, which we should return.
+        res = vnodes;
+    }
+
+    // Call the 'create' hook for each created node.
+    options.hooks && options.hooks.create && createdVNodes.forEach(function (node) {
+        options.hooks.create(node);
+    });
+    return res;
+};
+
+var _parse = require('html-parse-stringify2/lib/parse');
+
+var _parse2 = _interopRequireDefault(_parse);
+
+var _h = require('snabbdom/h');
+
+var _h2 = _interopRequireDefault(_h);
+
+var _utils = require('./utils');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function convertNodes(nodes, createdVNodes, context) {
+    if (nodes instanceof Array && nodes.length > 0) {
+        return nodes.map(function (node) {
+            return toVNode(node, createdVNodes, context);
+        });
+    } else {
+        return undefined;
+    }
+}
+
+function toVNode(node, createdVNodes, context) {
+    var newNode = void 0;
+    if (node.type === 'text') {
+        newNode = (0, _utils.createTextVNode)(node.content, context);
+    } else {
+        newNode = (0, _h2.default)(node.name, buildVNodeData(node, context), convertNodes(node.children, createdVNodes, context));
+    }
+    createdVNodes.push(newNode);
+    return newNode;
+}
+
+function buildVNodeData(node, context) {
+    var data = {};
+    if (!node.attrs) {
+        return data;
+    }
+
+    var attrs = Object.keys(node.attrs).reduce(function (memo, name) {
+        if (name !== 'style' && name !== 'class') {
+            var val = (0, _utils.unescapeEntities)(node.attrs[name], context);
+            memo ? memo[name] = val : memo = _defineProperty({}, name, val);
+        }
+        return memo;
+    }, null);
+    if (attrs) {
+        data.attrs = attrs;
+    }
+
+    var style = parseStyle(node);
+    if (style) {
+        data.style = style;
+    }
+
+    var classes = parseClass(node);
+    if (classes) {
+        data.class = classes;
+    }
+
+    return data;
+}
+
+function parseStyle(node) {
+    try {
+        return node.attrs.style.split(';').reduce(function (memo, styleProp) {
+            var res = styleProp.split(':');
+            var name = (0, _utils.transformName)(res[0].trim());
+            if (name) {
+                var val = res[1].replace('!important', '').trim();
+                memo ? memo[name] = val : memo = _defineProperty({}, name, val);
+            }
+            return memo;
+        }, null);
+    } catch (e) {
+        return null;
+    }
+}
+
+function parseClass(node) {
+    try {
+        return node.attrs.class.split(' ').reduce(function (memo, className) {
+            className = className.trim();
+            if (className) {
+                memo ? memo[className] = true : memo = _defineProperty({}, className, true);
+            }
+            return memo;
+        }, null);
+    } catch (e) {
+        return null;
+    }
+}
+},{"./utils":144,"html-parse-stringify2/lib/parse":102,"snabbdom/h":146}],144:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.createTextVNode = createTextVNode;
+exports.transformName = transformName;
+exports.unescapeEntities = unescapeEntities;
+
+var _vnode = require('snabbdom/vnode');
+
+var _vnode2 = _interopRequireDefault(_vnode);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function createTextVNode(text, context) {
+    return (0, _vnode2.default)(undefined, undefined, undefined, unescapeEntities(text, context));
+}
+
+function transformName(name) {
+    // Replace -a with A to help camel case style property names.
+    name = name.replace(/-(\w)/g, function _replace($1, $2) {
+        return $2.toUpperCase();
+    });
+    // Handle properties that start with a -.
+    var firstChar = name.charAt(0).toLowerCase();
+    return '' + firstChar + name.substring(1);
+}
+
+// Regex for matching HTML entities.
+var entityRegex = new RegExp('&[a-z0-9#]+;', 'gi');
+// Element for setting innerHTML for transforming entities.
+var el = null;
+
+function unescapeEntities(text, context) {
+    // Create the element using the context if it doesn't exist.
+    if (!el) {
+        el = context.createElement('div');
+    }
+    return text.replace(entityRegex, function (entity) {
+        el.innerHTML = entity;
+        return el.textContent;
+    });
+}
+},{"snabbdom/vnode":148}],145:[function(require,module,exports){
+module.exports = require('./lib/strings');
+
+},{"./lib/strings":143}],146:[function(require,module,exports){
+var VNode = require('./vnode');
+var is = require('./is');
+
+function addNS(data, children) {
+  data.ns = 'http://www.w3.org/2000/svg';
+  if (children !== undefined) {
+    for (var i = 0; i < children.length; ++i) {
+      addNS(children[i].data, children[i].children);
+    }
+  }
+}
+
+module.exports = function h(sel, b, c) {
+  var data = {}, children, text, i;
+  if (c !== undefined) {
+    data = b;
+    if (is.array(c)) { children = c; }
+    else if (is.primitive(c)) { text = c; }
+  } else if (b !== undefined) {
+    if (is.array(b)) { children = b; }
+    else if (is.primitive(b)) { text = b; }
+    else { data = b; }
+  }
+  if (is.array(children)) {
+    for (i = 0; i < children.length; ++i) {
+      if (is.primitive(children[i])) children[i] = VNode(undefined, undefined, undefined, children[i]);
+    }
+  }
+  if (sel[0] === 's' && sel[1] === 'v' && sel[2] === 'g') {
+    addNS(data, children);
+  }
+  return VNode(sel, data, children, text, undefined);
+};
+
+},{"./is":147,"./vnode":148}],147:[function(require,module,exports){
+arguments[4][58][0].apply(exports,arguments)
+},{"dup":58}],148:[function(require,module,exports){
+arguments[4][67][0].apply(exports,arguments)
+},{"dup":67}],149:[function(require,module,exports){
+/**
+ * This file automatically generated from `pre-publish.js`.
+ * Do not manually edit.
+ */
+
+module.exports = {
+  "area": true,
+  "base": true,
+  "br": true,
+  "col": true,
+  "embed": true,
+  "hr": true,
+  "img": true,
+  "input": true,
+  "keygen": true,
+  "link": true,
+  "menuitem": true,
+  "meta": true,
+  "param": true,
+  "source": true,
+  "track": true,
+  "wbr": true
+};
+
+},{}]},{},[99]);

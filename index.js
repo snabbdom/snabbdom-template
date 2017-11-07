@@ -1,11 +1,7 @@
 var vTSel = require('snabbdom-selector').default
 var vToHTML = require('snabbdom-to-html')
 var hToVDOM = require('snabbdom-virtualize/strings').default
-//var sh = require('snabbdom/h')
-var vNode = require('snabbdom/vnode')
-var vText = function (text) {
-  return vNode(undefined, undefined, undefined, unescape(text))
-}
+var vNode = require('snabbdom/h').default
 
 module.exports = function vDT (templates, contentvars) {
   var vt
@@ -19,7 +15,7 @@ module.exports = function vDT (templates, contentvars) {
   contentvars = contentvars || {}
   if ( Array.isArray(templates) ) {
     if ( 1 < templates.length ) {
-      var start = templates.reverse().shift()
+      var start = hToVDOM(templates.reverse().shift())
       start = Array.isArray(start)? vNode('div', {}, start): start // wrap div around array of elems
       vt = templates.reduce(function(prev, next) {
         var ret = hToVDOM(next)
@@ -30,7 +26,7 @@ module.exports = function vDT (templates, contentvars) {
         }
         else { console.log('Template selector not found.') }
         return ret
-      }, hToVDOM(start))
+      }, start)
       vt = hToVDOM(vToHTML(vt)) // how to clone?
     }
     else {
@@ -59,29 +55,29 @@ module.exports = function vDT (templates, contentvars) {
       if ( target.length ) {
         target = target[0]
         if ( 'string' === typeof value || 'number' === typeof value ) {
-          target.children = [vText(value)]
+          target.children = [vNode('div', value)]
         }
         else if ( 'object' === typeof value  ) {
           Object.keys(value).forEach(function (prop) {
             var targetprops = target.data.attrs = target.data.attrs || {}
             var valprop = value[prop]
             if ( '_html' === prop ) {
-              target.children = [vText(valprop)]
+              target.children = [vNode('div', valprop)]
             }
             else if ( '_append' === prop ) {
-              target.children.push(vText(valprop))
+              target.children.push(vNode('div', valprop))
             }
             else if ( '_prepend' === prop ) {
-              target.children.unshift(vText(valprop))
+              target.children.unshift(vNode('div', valprop))
             }
-            else if (/^_map/.test(prop) && 'object' === typeof valprop && null !== valprop ) {
+            else if ( /^_map/.test(prop) && 'object' === typeof valprop && null !== valprop ) {
               Object.keys(valprop).forEach(function (mapkey) {
                 var subtmpl = hToVDOM(vToHTML(vTSel(mapkey, target)[0])) // how else to clone?
                 if ( '_map' === prop ) { target.children = [] }
                 valprop[mapkey].forEach(function (cvars) {
                   var mapd
                   if ( 'string' === typeof cvars ) {
-                    subtmpl.children = [vText(cvars)]
+                    subtmpl.children = [vNode('div', cvars)]
                     mapd = hToVDOM(vToHTML(subtmpl)) // how to clone?
                   }
                   else if ( 'object' === typeof cvars ) {
@@ -93,6 +89,10 @@ module.exports = function vDT (templates, contentvars) {
                   }
                 })
               })
+            }
+            else if ( '_on' === prop ) {
+              target.data.on = target.data.on || {}
+              target.data.on.click = valprop.click
             }
             else {
               var cur = targetprops[prop] || ''

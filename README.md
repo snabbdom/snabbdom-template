@@ -119,6 +119,41 @@ var vtree = snabbdomTemplate(outer, sh('div.myclass', 'My content.'))
 </html>
 ```
 
+[main-loop](https://www.npmjs.com/package/main-loop) example
+```
+var fs = require('fs')
+var sT = require('snabbdom-template')
+var mL = require('main-loop')
+
+var patch = require('snabbdom').init([
+  require('snabbdom/modules/eventlisteners').default,
+])
+var initstate = {n:0}
+
+var outer = fs.readFileSync('public/mainsimple.html', 'utf-8')
+var inner = fs.readFileSync('public/button.html', 'utf-8')
+
+var view = function (state) {
+  return sT([outer, inner], {
+    '#count': state.n,
+    'button': {'_on': {click: onclick}}
+  })
+}
+
+var loop = mL(initstate, view, {
+  target: document.getElementById('content'),
+  diff: function (tree, newTree) { return newTree }, // snabbdom incorporates diff in patch
+  patch: patch
+})
+loop.update(initstate)
+
+function onclick () {
+  initstate.n++
+  loop.update(initstate)
+}
+```
+...then `browserify -t brfs index.js > public/bundle.js` and include `<script src="bundle.js"></script>` at the bottom of your HTML body.
+
 ### license
 
 MIT
