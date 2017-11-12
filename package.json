@@ -12,7 +12,7 @@
     "url": "git+https://github.com/bloodyKnuckles/snabbdom-template.git"
   },
   "dependencies": {
-    "snabbdom": "^0.6.6",
+    "snabbdom": "^0.7.0",
     "snabbdom-selector": "^0.4.0",
     "snabbdom-to-html": "^3.3.0",
     "snabbdom-virtualize": "^0.7.0"
