@@ -62,7 +62,7 @@ module.exports = function vDT (templates, contentvars) {
             var targetprops = target.data.attrs = target.data.attrs || {}
             var valprop = value[prop]
             if ( '_html' === prop ) {
-              target.children = [vNode('div', valprop)]
+              target.children = [vNode('span', valprop)]
             }
             else if ( '_append' === prop ) {
               target.children.push(vNode('div', valprop))
@@ -77,7 +77,7 @@ module.exports = function vDT (templates, contentvars) {
                 valprop[mapkey].forEach(function (cvars) {
                   var mapd
                   if ( 'string' === typeof cvars ) {
-                    subtmpl.children = [vNode('div', cvars)]
+                    subtmpl.children = [vNode('span', cvars)]
                     mapd = hToVDOM(vToHTML(subtmpl)) // how to clone?
                   }
                   else if ( 'object' === typeof cvars ) {
