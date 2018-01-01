@@ -55,7 +55,7 @@ module.exports = function vDT (templates, contentvars) {
       if ( target.length ) {
         target = target[0]
         if ( 'string' === typeof value || 'number' === typeof value ) {
-          target.children = [vNode('div', value)]
+          target.children = [vNode('span', value)]
         }
         else if ( 'object' === typeof value  ) {
           Object.keys(value).forEach(function (prop) {
